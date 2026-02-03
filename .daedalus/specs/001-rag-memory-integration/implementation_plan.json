@@ -381,7 +381,7 @@
           "id": "6.1",
           "title": "Add unit tests for RAG clients",
           "description": "Create test files for LightRAG and Memory Service clients with mocked HTTP responses.",
-          "status": "pending",
+          "status": "completed",
           "files_to_create": [
             "src/memory/graphiti-client.test.ts",
             "src/memory/lightrag-client.test.ts",
@@ -392,7 +392,9 @@
             "Test error handling",
             "Test timeout behavior",
             "Test health check failures"
-          ]
+          ],
+          "notes": "Test files for all three RAG clients (Graphiti, LightRAG, Memory Service) successfully created and committed. All tests passing with comprehensive coverage of:\n- Health checks (successful and failing)\n- Successful query/search operations with proper response transformation\n- Parameter handling (query, mode, limit, entityTypes, timeRange)\n- Error handling (non-ok HTTP responses)\n- Timeout behavior (via AbortController)\n- Edge cases (empty responses, partial responses)\n- Configuration (endpoints, timeouts, defaults)\n\nTests use vitest with mocked fetch responses and follow the established patterns in the codebase. Commit: a5b21ad80 with message \"daedalus: 6.1 - Create test files for LightRAG and Memory Service clients\"",
+          "updated_at": "2026-02-03T22:57:39.148844+00:00"
         },
         {
           "id": "6.2",
@@ -454,5 +456,5 @@
     "The rag-context-inject hook uses the agent:bootstrap event to inject synthetic bootstrap files",
     "Tools are conditionally created based on memorySearch config in openclaw.json"
   ],
-  "last_updated": "2026-02-03T20:21:25.259247+00:00"
+  "last_updated": "2026-02-03T22:57:39.148856+00:00"
 }

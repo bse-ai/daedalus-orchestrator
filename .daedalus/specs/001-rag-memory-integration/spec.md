@@ -56,11 +56,13 @@ This feature implements full integration between OpenClaw and the force-multipli
 ## Task Scope
 
 ### Services Involved
+
 - **src/tools/** (primary) — New RAG query tools
 - **src/hooks/bundled/** (primary) — New context injection hook
 - **src/memory/** (integration) — Extend existing graphiti-client, add lightrag-client and memory-service-client
 
 ### This Task Will:
+
 - [ ] Create `graphiti_search` tool — Search entities, relationships, get temporal context
 - [ ] Create `lightrag_query` tool — Query document graph RAG (hybrid mode)
 - [ ] Create `memory_service_query` tool — Query universal memory layer
@@ -71,6 +73,7 @@ This feature implements full integration between OpenClaw and the force-multipli
 - [ ] Add RAG_CONTEXT.md to bootstrap file injection
 
 ### Out of Scope:
+
 - Modifications to the existing graphiti-sync hook (already works)
 - LightRAG ingestion pipeline (separate concern)
 - Neo4j direct access (use HTTP APIs only)
@@ -81,6 +84,7 @@ This feature implements full integration between OpenClaw and the force-multipli
 ### OpenClaw (Primary)
 
 **Tech Stack:**
+
 - Language: TypeScript (Node.js)
 - Framework: None (CLI/Gateway)
 - Build: pnpm, tsup
@@ -89,6 +93,7 @@ This feature implements full integration between OpenClaw and the force-multipli
 **Entry Point:** `src/index.ts`
 
 **How to Run:**
+
 ```bash
 pnpm dev
 # or
@@ -96,49 +101,52 @@ openclaw gateway start
 ```
 
 **Existing Dependencies:**
+
 - Node.js 20+
 - TypeScript
 - fetch (native)
 
 ## Files to Create
 
-| File | Purpose |
-|------|---------|
-| `src/memory/lightrag-client.ts` | HTTP client for LightRAG API |
-| `src/memory/memory-service-client.ts` | HTTP client for Memory Service API |
-| `src/tools/bundled/graphiti-search.ts` | Graphiti search tool |
-| `src/tools/bundled/lightrag-query.ts` | LightRAG query tool |
-| `src/tools/bundled/memory-service-query.ts` | Memory Service query tool |
-| `src/hooks/bundled/rag-context-inject/handler.ts` | Context injection hook |
-| `src/hooks/bundled/rag-context-inject/HOOK.md` | Hook metadata |
+| File                                              | Purpose                            |
+| ------------------------------------------------- | ---------------------------------- |
+| `src/memory/lightrag-client.ts`                   | HTTP client for LightRAG API       |
+| `src/memory/memory-service-client.ts`             | HTTP client for Memory Service API |
+| `src/tools/bundled/graphiti-search.ts`            | Graphiti search tool               |
+| `src/tools/bundled/lightrag-query.ts`             | LightRAG query tool                |
+| `src/tools/bundled/memory-service-query.ts`       | Memory Service query tool          |
+| `src/hooks/bundled/rag-context-inject/handler.ts` | Context injection hook             |
+| `src/hooks/bundled/rag-context-inject/HOOK.md`    | Hook metadata                      |
 
 ## Files to Modify
 
-| File | What to Change |
-|------|----------------|
-| `src/tools/bundled/index.ts` | Export new tools |
-| `src/hooks/bundled/index.ts` | Export new hook |
+| File                                 | What to Change                                 |
+| ------------------------------------ | ---------------------------------------------- |
+| `src/tools/bundled/index.ts`         | Export new tools                               |
+| `src/hooks/bundled/index.ts`         | Export new hook                                |
 | `src/config/types.agent-defaults.ts` | Add lightrag and memory-service config options |
-| `src/agents/bootstrap-files.ts` | Inject RAG_CONTEXT.md when available |
+| `src/agents/bootstrap-files.ts`      | Inject RAG_CONTEXT.md when available           |
 
 ## Files to Reference
 
-| File | Pattern to Copy |
-|------|-----------------|
-| `src/memory/graphiti-client.ts` | HTTP client pattern for RAG services |
-| `src/hooks/bundled/graphiti-sync/handler.ts` | Hook implementation pattern |
-| `src/tools/bundled/memory-search.ts` | Tool implementation pattern |
-| `docs/design/graphiti-memory-integration.md` | Design context and API endpoints |
+| File                                         | Pattern to Copy                      |
+| -------------------------------------------- | ------------------------------------ |
+| `src/memory/graphiti-client.ts`              | HTTP client pattern for RAG services |
+| `src/hooks/bundled/graphiti-sync/handler.ts` | Hook implementation pattern          |
+| `src/tools/bundled/memory-search.ts`         | Tool implementation pattern          |
+| `docs/design/graphiti-memory-integration.md` | Design context and API endpoints     |
 
 ## RAG API Endpoints
 
 ### Graphiti (localhost:8000) — Already documented in graphiti-client.ts
+
 - `GET /entities/search` — Natural language entity search
 - `GET /graph` — Get graph at point in time
 - `GET /entities/{id}` — Entity details with neighbors
 - `GET /timeline` — Stats and temporal bounds
 
 ### LightRAG (localhost:8001) — New client needed
+
 - `POST /query` — Query knowledge base
   - Modes: naive, local, global, hybrid
   - Returns: answer, sources, entities, confidence
@@ -146,6 +154,7 @@ openclaw gateway start
 - `GET /stats` — Knowledge base statistics
 
 ### Memory Service (localhost:8002) — New client needed
+
 - `POST /memories` — Add memory (future use)
 - `GET /memories/search` — Search memories by query
 - `GET /entities` — List entities with counts
@@ -155,35 +164,35 @@ openclaw gateway start
 
 ```json5
 {
-  "agents": {
-    "defaults": {
-      "memorySearch": {
-        "graphiti": {
-          "enabled": true,
-          "endpoint": "http://localhost:8000"
+  agents: {
+    defaults: {
+      memorySearch: {
+        graphiti: {
+          enabled: true,
+          endpoint: "http://localhost:8000",
         },
-        "lightrag": {
-          "enabled": true,
-          "endpoint": "http://localhost:8001"
+        lightrag: {
+          enabled: true,
+          endpoint: "http://localhost:8001",
         },
-        "memoryService": {
-          "enabled": true,
-          "endpoint": "http://localhost:8002"
-        }
-      }
-    }
+        memoryService: {
+          enabled: true,
+          endpoint: "http://localhost:8002",
+        },
+      },
+    },
   },
-  "hooks": {
-    "internal": {
-      "entries": {
+  hooks: {
+    internal: {
+      entries: {
         "rag-context-inject": {
-          "enabled": true,
-          "maxEntities": 20,
-          "maxRelations": 30
-        }
-      }
-    }
-  }
+          enabled: true,
+          maxEntities: 20,
+          maxRelations: 30,
+        },
+      },
+    },
+  },
 }
 ```
 

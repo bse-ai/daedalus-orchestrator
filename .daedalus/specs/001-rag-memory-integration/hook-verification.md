@@ -20,18 +20,20 @@ src/hooks/bundled/rag-context-inject/
 ## Key Verifications
 
 ### 1. Hook Directory Location ✓
+
 - **Location:** `src/hooks/bundled/rag-context-inject/`
 - **Status:** Present alongside other bundled hooks (boot-md, session-memory, command-logger, soul-evil)
 - **Discovery:** Will be found by `loadHooksFromDir()` in `src/hooks/workspace.ts`
 
 ### 2. HOOK.md Metadata ✓
+
 ```yaml
 name: rag-context-inject
 description: "Auto-inject relevant RAG context into agent bootstrap on session start"
 metadata:
   openclaw:
     emoji: "🧠"
-    events: ["agent:bootstrap"]    # Correct event specified
+    events: ["agent:bootstrap"] # Correct event specified
     requires:
       config:
         - agents.defaults.memorySearch.graphiti.endpoint
@@ -40,6 +42,7 @@ metadata:
 ```
 
 ### 3. Handler File ✓
+
 - **File:** `handler.ts` (one of the valid handler candidates)
 - **Export:** `export default injectRAGContext;` (default export as expected)
 - **Type:** Implements `HookHandler<AgentBootstrapHookContext>` interface
@@ -49,6 +52,7 @@ metadata:
 The hook will be discovered and registered through this flow:
 
 1. **Server Startup** (`src/gateway/server-startup.ts:104`)
+
    ```ts
    await loadInternalHooks(params.cfg, params.defaultWorkspaceDir);
    ```
@@ -71,12 +75,15 @@ The hook will be discovered and registered through this flow:
    - Falls back to src/hooks/bundled (development) ✓
 
 ### 5. Event Registration ✓
+
 - **Event:** `agent:bootstrap`
 - **Registration:** Hook will be registered to trigger on this event
 - **Context:** Receives `AgentBootstrapHookContext` with access to `bootstrapFiles[]`
 
 ### 6. Configuration Support ✓
+
 The hook respects configuration from `openclaw.json`:
+
 ```json
 {
   "hooks": {
@@ -97,7 +104,9 @@ The hook respects configuration from `openclaw.json`:
 ```
 
 ### 7. Test Coverage ✓
+
 Comprehensive test suite exists in `discovery.test.ts`:
+
 - ✅ Hook discovered in bundled directory
 - ✅ Correct metadata (name, source, events, emoji)
 - ✅ Valid handler file path
@@ -148,6 +157,7 @@ openclaw hooks list | grep rag-context-inject
 ✅ The `rag-context-inject` hook is **properly structured and will be discovered and registered** by the hook loader system.
 
 All acceptance criteria met:
+
 - ✅ Hook discovered in bundled hooks directory
 - ✅ Hook registered for agent:bootstrap event
 - ✅ Hook config read from openclaw.json

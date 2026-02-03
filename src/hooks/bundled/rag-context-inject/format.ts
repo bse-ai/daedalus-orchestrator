@@ -73,29 +73,38 @@ export function formatGraphitiContext(
 export function formatLightRAGContext(response: LightRAGQueryResponse): string {
   const sections: string[] = [];
 
+  // Check if there's any content to display
+  const hasAnswer = response.answer && response.answer.trim().length > 0;
+  const hasSources = response.sources && response.sources.length > 0;
+  const hasEntities = response.entities && response.entities.length > 0;
+
+  if (!hasAnswer && !hasSources && !hasEntities) {
+    return "";
+  }
+
   sections.push("## Long-term Document Context (LightRAG)");
   sections.push("");
 
-  if (response.answer) {
+  if (hasAnswer) {
     sections.push("### Answer");
     sections.push("");
     sections.push(response.answer);
     sections.push("");
   }
 
-  if (response.sources && response.sources.length > 0) {
+  if (hasSources) {
     sections.push("### Sources");
     sections.push("");
-    for (const source of response.sources) {
+    for (const source of response.sources!) {
       sections.push(`- ${source}`);
     }
     sections.push("");
   }
 
-  if (response.entities && response.entities.length > 0) {
+  if (hasEntities) {
     sections.push("### Related Entities");
     sections.push("");
-    sections.push(response.entities.join(", "));
+    sections.push(response.entities!.join(", "));
     sections.push("");
   }
 
@@ -179,7 +188,10 @@ export function combineRAGContext(result: RAGContextResult, timestamp: Date): st
   const hasContent =
     (result.graphiti &&
       (result.graphiti.entities.length > 0 || result.graphiti.relationships.length > 0)) ||
-    result.lightrag ||
+    (result.lightrag &&
+      ((result.lightrag.answer && result.lightrag.answer.trim().length > 0) ||
+        (result.lightrag.sources && result.lightrag.sources.length > 0) ||
+        (result.lightrag.entities && result.lightrag.entities.length > 0))) ||
     (result.memoryService && result.memoryService.memories.length > 0);
 
   if (!hasContent) {
