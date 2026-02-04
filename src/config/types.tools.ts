@@ -1,6 +1,6 @@
 import type { NormalizedChatType } from "../channels/chat-type.js";
 import type { AgentElevatedAllowFromConfig, SessionSendPolicyAction } from "./types.base.js";
-import type { GraphitiConfig, LightRAGConfig, MemoryServiceConfig } from "./types.rag.js";
+import type { GraphitiConfig, LightRAGConfig, MemoryServiceConfig, RAGServiceConfig } from "./types.rag.js";
 
 export type MediaUnderstandingScopeMatch = {
   channel?: string;
@@ -328,6 +328,8 @@ export type MemorySearchConfig = {
   lightrag?: LightRAGConfig;
   /** Memory Service universal memory layer configuration. */
   memoryService?: MemoryServiceConfig;
+  /** Combined RAG services configuration (alternative to individual service configs). */
+  ragServices?: RAGServiceConfig;
 };
 
 export type ToolsConfig = {

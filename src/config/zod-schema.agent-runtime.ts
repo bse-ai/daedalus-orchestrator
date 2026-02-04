@@ -337,6 +337,15 @@ export const MemoryServiceConfigSchema = z
   .strict()
   .optional();
 
+export const RAGServicesSchema = z
+  .object({
+    graphiti: GraphitiConfigSchema,
+    lightrag: LightRAGConfigSchema,
+    memoryService: MemoryServiceConfigSchema,
+  })
+  .strict()
+  .optional();
+
 export const MemorySearchSchema = z
   .object({
     enabled: z.boolean().optional(),
@@ -442,6 +451,7 @@ export const MemorySearchSchema = z
     graphiti: GraphitiConfigSchema,
     lightrag: LightRAGConfigSchema,
     memoryService: MemoryServiceConfigSchema,
+    ragServices: RAGServicesSchema,
   })
   .strict()
   .optional();

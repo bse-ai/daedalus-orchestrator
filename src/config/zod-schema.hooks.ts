@@ -56,6 +56,11 @@ const HookConfigSchema = z
   .object({
     enabled: z.boolean().optional(),
     env: z.record(z.string(), z.string()).optional(),
+    // rag-context-inject hook config
+    maxEntities: z.number().int().positive().optional(),
+    maxRelations: z.number().int().positive().optional(),
+    maxMemories: z.number().int().positive().optional(),
+    maxDocuments: z.number().int().positive().optional(),
   })
   .strict();
 
