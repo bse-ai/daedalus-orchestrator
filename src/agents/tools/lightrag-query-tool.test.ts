@@ -275,8 +275,9 @@ describe("lightrag_query tool", () => {
             },
           },
         },
-        agents: {
-          beta: {
+        list: [
+          {
+            id: "beta",
             memorySearch: {
               lightrag: {
                 enabled: true,
@@ -284,7 +285,7 @@ describe("lightrag_query tool", () => {
               },
             },
           },
-        },
+        ],
       },
     } as OpenClawConfig;
 

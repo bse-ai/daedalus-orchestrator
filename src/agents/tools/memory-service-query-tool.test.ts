@@ -225,8 +225,9 @@ describe("memory_service_query tool", () => {
             },
           },
         },
-        agents: {
-          gamma: {
+        list: [
+          {
+            id: "gamma",
             memorySearch: {
               memoryService: {
                 enabled: true,
@@ -234,7 +235,7 @@ describe("memory_service_query tool", () => {
               },
             },
           },
-        },
+        ],
       },
     } as OpenClawConfig;
 

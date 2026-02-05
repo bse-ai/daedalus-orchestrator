@@ -233,8 +233,9 @@ describe("graphiti_search tool", () => {
             },
           },
         },
-        agents: {
-          alpha: {
+        list: [
+          {
+            id: "alpha",
             memorySearch: {
               graphiti: {
                 enabled: true,
@@ -242,7 +243,7 @@ describe("graphiti_search tool", () => {
               },
             },
           },
-        },
+        ],
       },
     } as OpenClawConfig;
 
