@@ -124,14 +124,12 @@ describe("rag-context-inject hook", () => {
 
     const mockHealth = vi.fn().mockResolvedValue(true);
 
-    vi.spyOn(GraphitiClientModule, "GraphitiClient").mockImplementation(
-      function () {
-        return {
-          health: mockHealth,
-          search: mockSearch,
-        };
-      } as any,
-    );
+    vi.spyOn(GraphitiClientModule, "GraphitiClient").mockImplementation(function () {
+      return {
+        health: mockHealth,
+        search: mockSearch,
+      };
+    } as any);
 
     const cfg: OpenClawConfig = {
       agents: {
@@ -184,14 +182,12 @@ describe("rag-context-inject hook", () => {
 
     const mockHealth = vi.fn().mockResolvedValue(true);
 
-    vi.spyOn(LightRAGClientModule, "LightRAGClient").mockImplementation(
-      function () {
-        return {
-          health: mockHealth,
-          query: mockQuery,
-        };
-      } as any,
-    );
+    vi.spyOn(LightRAGClientModule, "LightRAGClient").mockImplementation(function () {
+      return {
+        health: mockHealth,
+        query: mockQuery,
+      };
+    } as any);
 
     const cfg: OpenClawConfig = {
       agents: {
@@ -260,14 +256,12 @@ describe("rag-context-inject hook", () => {
 
     const mockHealth = vi.fn().mockResolvedValue(true);
 
-    vi.spyOn(MemoryServiceClientModule, "MemoryServiceClient").mockImplementation(
-      function () {
-        return {
-          health: mockHealth,
-          search: mockSearch,
-        };
-      } as any,
-    );
+    vi.spyOn(MemoryServiceClientModule, "MemoryServiceClient").mockImplementation(function () {
+      return {
+        health: mockHealth,
+        search: mockSearch,
+      };
+    } as any);
 
     const cfg: OpenClawConfig = {
       agents: {
@@ -311,40 +305,34 @@ describe("rag-context-inject hook", () => {
     const tempDir = await makeTempWorkspace("openclaw-rag-");
 
     // Mock all three clients
-    vi.spyOn(GraphitiClientModule, "GraphitiClient").mockImplementation(
-      function () {
-        return {
-          health: vi.fn().mockResolvedValue(true),
-          search: vi.fn().mockResolvedValue({
-            entities: [{ name: "GraphitiEntity", type: "test" }],
-            relationships: [],
-          }),
-        };
-      } as any,
-    );
+    vi.spyOn(GraphitiClientModule, "GraphitiClient").mockImplementation(function () {
+      return {
+        health: vi.fn().mockResolvedValue(true),
+        search: vi.fn().mockResolvedValue({
+          entities: [{ name: "GraphitiEntity", type: "test" }],
+          relationships: [],
+        }),
+      };
+    } as any);
 
-    vi.spyOn(LightRAGClientModule, "LightRAGClient").mockImplementation(
-      function () {
-        return {
-          health: vi.fn().mockResolvedValue(true),
-          query: vi.fn().mockResolvedValue({
-            answer: "LightRAG answer",
-            sources: [],
-          }),
-        };
-      } as any,
-    );
+    vi.spyOn(LightRAGClientModule, "LightRAGClient").mockImplementation(function () {
+      return {
+        health: vi.fn().mockResolvedValue(true),
+        query: vi.fn().mockResolvedValue({
+          answer: "LightRAG answer",
+          sources: [],
+        }),
+      };
+    } as any);
 
-    vi.spyOn(MemoryServiceClientModule, "MemoryServiceClient").mockImplementation(
-      function () {
-        return {
-          health: vi.fn().mockResolvedValue(true),
-          search: vi.fn().mockResolvedValue({
-            memories: [{ id: "m1", content: "Memory content", score: 0.9 }],
-          }),
-        };
-      } as any,
-    );
+    vi.spyOn(MemoryServiceClientModule, "MemoryServiceClient").mockImplementation(function () {
+      return {
+        health: vi.fn().mockResolvedValue(true),
+        search: vi.fn().mockResolvedValue({
+          memories: [{ id: "m1", content: "Memory content", score: 0.9 }],
+        }),
+      };
+    } as any);
 
     const cfg: OpenClawConfig = {
       agents: {
@@ -381,14 +369,12 @@ describe("rag-context-inject hook", () => {
     const tempDir = await makeTempWorkspace("openclaw-rag-");
 
     // Mock unhealthy service
-    vi.spyOn(GraphitiClientModule, "GraphitiClient").mockImplementation(
-      function () {
-        return {
-          health: vi.fn().mockResolvedValue(false),
-          search: vi.fn(),
-        };
-      } as any,
-    );
+    vi.spyOn(GraphitiClientModule, "GraphitiClient").mockImplementation(function () {
+      return {
+        health: vi.fn().mockResolvedValue(false),
+        search: vi.fn(),
+      };
+    } as any);
 
     const cfg: OpenClawConfig = {
       agents: {
@@ -422,14 +408,12 @@ describe("rag-context-inject hook", () => {
     const tempDir = await makeTempWorkspace("openclaw-rag-");
 
     // Mock service that throws error
-    vi.spyOn(GraphitiClientModule, "GraphitiClient").mockImplementation(
-      function () {
-        return {
-          health: vi.fn().mockResolvedValue(true),
-          search: vi.fn().mockRejectedValue(new Error("Network error")),
-        };
-      } as any,
-    );
+    vi.spyOn(GraphitiClientModule, "GraphitiClient").mockImplementation(function () {
+      return {
+        health: vi.fn().mockResolvedValue(true),
+        search: vi.fn().mockRejectedValue(new Error("Network error")),
+      };
+    } as any);
 
     const cfg: OpenClawConfig = {
       agents: {
@@ -467,14 +451,12 @@ describe("rag-context-inject hook", () => {
       relationships: [],
     });
 
-    vi.spyOn(GraphitiClientModule, "GraphitiClient").mockImplementation(
-      function () {
-        return {
-          health: vi.fn().mockResolvedValue(true),
-          search: mockSearch,
-        };
-      } as any,
-    );
+    vi.spyOn(GraphitiClientModule, "GraphitiClient").mockImplementation(function () {
+      return {
+        health: vi.fn().mockResolvedValue(true),
+        search: mockSearch,
+      };
+    } as any);
 
     const cfg: OpenClawConfig = {
       agents: {
@@ -521,40 +503,34 @@ describe("rag-context-inject hook", () => {
     const tempDir = await makeTempWorkspace("openclaw-rag-");
 
     // Mock services returning empty results
-    vi.spyOn(GraphitiClientModule, "GraphitiClient").mockImplementation(
-      function () {
-        return {
-          health: vi.fn().mockResolvedValue(true),
-          search: vi.fn().mockResolvedValue({
-            entities: [],
-            relationships: [],
-          }),
-        };
-      } as any,
-    );
+    vi.spyOn(GraphitiClientModule, "GraphitiClient").mockImplementation(function () {
+      return {
+        health: vi.fn().mockResolvedValue(true),
+        search: vi.fn().mockResolvedValue({
+          entities: [],
+          relationships: [],
+        }),
+      };
+    } as any);
 
-    vi.spyOn(LightRAGClientModule, "LightRAGClient").mockImplementation(
-      function () {
-        return {
-          health: vi.fn().mockResolvedValue(true),
-          query: vi.fn().mockResolvedValue({
-            answer: "",
-            sources: [],
-          }),
-        };
-      } as any,
-    );
+    vi.spyOn(LightRAGClientModule, "LightRAGClient").mockImplementation(function () {
+      return {
+        health: vi.fn().mockResolvedValue(true),
+        query: vi.fn().mockResolvedValue({
+          answer: "",
+          sources: [],
+        }),
+      };
+    } as any);
 
-    vi.spyOn(MemoryServiceClientModule, "MemoryServiceClient").mockImplementation(
-      function () {
-        return {
-          health: vi.fn().mockResolvedValue(true),
-          search: vi.fn().mockResolvedValue({
-            memories: [],
-          }),
-        };
-      } as any,
-    );
+    vi.spyOn(MemoryServiceClientModule, "MemoryServiceClient").mockImplementation(function () {
+      return {
+        health: vi.fn().mockResolvedValue(true),
+        search: vi.fn().mockResolvedValue({
+          memories: [],
+        }),
+      };
+    } as any);
 
     const cfg: OpenClawConfig = {
       agents: {

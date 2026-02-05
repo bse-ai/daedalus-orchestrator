@@ -138,7 +138,10 @@ describe("GraphitiClient", () => {
       expect.stringContaining("start=2026-01-01"),
       expect.anything(),
     );
-    expect(fetchImpl).toHaveBeenCalledWith(expect.stringContaining("end=2026-01-31"), expect.anything());
+    expect(fetchImpl).toHaveBeenCalledWith(
+      expect.stringContaining("end=2026-01-31"),
+      expect.anything(),
+    );
     expect(fetchImpl).toHaveBeenCalledWith(expect.stringContaining("limit=10"), expect.anything());
   });
 

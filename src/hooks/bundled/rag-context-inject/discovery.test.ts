@@ -7,10 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadWorkspaceHookEntries } from "../../workspace.js";
 import { loadInternalHooks } from "../../loader.js";
-import {
-  clearInternalHooks,
-  getRegisteredEventKeys,
-} from "../../internal-hooks.js";
+import { clearInternalHooks, getRegisteredEventKeys } from "../../internal-hooks.js";
 import type { OpenClawConfig } from "../../../config/config.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -36,9 +33,7 @@ describe("rag-context-inject hook discovery", () => {
     });
 
     // Find rag-context-inject hook
-    const ragHook = hookEntries.find(
-      (entry) => entry.hook.name === "rag-context-inject"
-    );
+    const ragHook = hookEntries.find((entry) => entry.hook.name === "rag-context-inject");
 
     // Verify hook was discovered
     expect(ragHook).toBeDefined();
@@ -53,9 +48,7 @@ describe("rag-context-inject hook discovery", () => {
       bundledHooksDir: bundledDir,
     });
 
-    const ragHook = hookEntries.find(
-      (entry) => entry.hook.name === "rag-context-inject"
-    );
+    const ragHook = hookEntries.find((entry) => entry.hook.name === "rag-context-inject");
 
     // Verify metadata
     expect(ragHook?.metadata).toBeDefined();
@@ -70,9 +63,7 @@ describe("rag-context-inject hook discovery", () => {
       bundledHooksDir: bundledDir,
     });
 
-    const ragHook = hookEntries.find(
-      (entry) => entry.hook.name === "rag-context-inject"
-    );
+    const ragHook = hookEntries.find((entry) => entry.hook.name === "rag-context-inject");
 
     // Verify handler path exists and ends with handler.ts
     expect(ragHook?.hook.handlerPath).toBeDefined();

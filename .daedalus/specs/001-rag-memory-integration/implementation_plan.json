@@ -13,13 +13,8 @@
           "title": "Create LightRAG HTTP client",
           "description": "Create src/memory/lightrag-client.ts with query, getEntities, and getStats methods following the pattern established by other memory modules. Client should include health check, error handling, and timeout support.",
           "status": "completed",
-          "files_to_create": [
-            "src/memory/lightrag-client.ts"
-          ],
-          "files_to_reference": [
-            "src/memory/embeddings-openai.ts",
-            "src/memory/manager.ts"
-          ],
+          "files_to_create": ["src/memory/lightrag-client.ts"],
+          "files_to_reference": ["src/memory/embeddings-openai.ts", "src/memory/manager.ts"],
           "acceptance_criteria": [
             "POST /query with mode parameter (naive/local/global/hybrid)",
             "GET /graph/entities for entity listing",
@@ -35,12 +30,8 @@
           "title": "Create Memory Service HTTP client",
           "description": "Create src/memory/memory-service-client.ts with search, listEntities, and health methods. Follow same patterns as LightRAG client.",
           "status": "completed",
-          "files_to_create": [
-            "src/memory/memory-service-client.ts"
-          ],
-          "files_to_reference": [
-            "src/memory/lightrag-client.ts"
-          ],
+          "files_to_create": ["src/memory/memory-service-client.ts"],
+          "files_to_reference": ["src/memory/lightrag-client.ts"],
           "acceptance_criteria": [
             "GET /memories/search with query and limit parameters",
             "GET /entities for entity listing",
@@ -56,12 +47,8 @@
           "title": "Create Graphiti HTTP client",
           "description": "Create src/memory/graphiti-client.ts with search, getGraph, getEntity, and getTimeline methods. This client will be used by the graphiti_search tool.",
           "status": "completed",
-          "files_to_create": [
-            "src/memory/graphiti-client.ts"
-          ],
-          "files_to_reference": [
-            "src/memory/lightrag-client.ts"
-          ],
+          "files_to_create": ["src/memory/graphiti-client.ts"],
+          "files_to_reference": ["src/memory/lightrag-client.ts"],
           "acceptance_criteria": [
             "GET /entities/search with natural language query",
             "GET /graph for point-in-time graph retrieval",
@@ -84,13 +71,8 @@
           "title": "Define RAG service config types",
           "description": "Create src/config/types.rag.ts with RAGServiceConfig, GraphitiConfig, LightRAGConfig, and MemoryServiceConfig types.",
           "status": "completed",
-          "files_to_create": [
-            "src/config/types.rag.ts"
-          ],
-          "files_to_reference": [
-            "src/config/types.tools.ts",
-            "src/config/types.agent-defaults.ts"
-          ],
+          "files_to_create": ["src/config/types.rag.ts"],
+          "files_to_reference": ["src/config/types.tools.ts", "src/config/types.agent-defaults.ts"],
           "acceptance_criteria": [
             "GraphitiConfig with enabled, endpoint fields",
             "LightRAGConfig with enabled, endpoint fields",
@@ -106,12 +88,8 @@
           "title": "Extend MemorySearchConfig with RAG options",
           "description": "Update src/config/types.tools.ts to add graphiti, lightrag, and memoryService options under MemorySearchConfig or add a separate ragSearch config.",
           "status": "completed",
-          "files_to_modify": [
-            "src/config/types.tools.ts"
-          ],
-          "files_to_reference": [
-            "src/config/types.rag.ts"
-          ],
+          "files_to_modify": ["src/config/types.tools.ts"],
+          "files_to_reference": ["src/config/types.rag.ts"],
           "acceptance_criteria": [
             "MemorySearchConfig extended with RAG service options",
             "Each service has enabled and endpoint fields",
@@ -125,12 +103,8 @@
           "title": "Add Zod schema for RAG config validation",
           "description": "Update the Zod schema files to validate RAG configuration options.",
           "status": "completed",
-          "files_to_modify": [
-            "src/config/zod-schema.core.ts"
-          ],
-          "files_to_reference": [
-            "src/config/types.rag.ts"
-          ],
+          "files_to_modify": ["src/config/zod-schema.core.ts"],
+          "files_to_reference": ["src/config/types.rag.ts"],
           "acceptance_criteria": [
             "Zod schema validates graphiti config",
             "Zod schema validates lightrag config",
@@ -152,9 +126,7 @@
           "title": "Create graphiti_search tool",
           "description": "Create src/agents/tools/graphiti-search-tool.ts implementing the graphiti_search tool. Uses the Graphiti client to search entities and relationships.",
           "status": "completed",
-          "files_to_create": [
-            "src/agents/tools/graphiti-search-tool.ts"
-          ],
+          "files_to_create": ["src/agents/tools/graphiti-search-tool.ts"],
           "files_to_reference": [
             "src/agents/tools/memory-tool.ts",
             "src/memory/graphiti-client.ts"
@@ -174,9 +146,7 @@
           "title": "Create lightrag_query tool",
           "description": "Create src/agents/tools/lightrag-query-tool.ts implementing the lightrag_query tool. Uses the LightRAG client for hybrid document search.",
           "status": "completed",
-          "files_to_create": [
-            "src/agents/tools/lightrag-query-tool.ts"
-          ],
+          "files_to_create": ["src/agents/tools/lightrag-query-tool.ts"],
           "files_to_reference": [
             "src/agents/tools/memory-tool.ts",
             "src/memory/lightrag-client.ts"
@@ -196,9 +166,7 @@
           "title": "Create memory_service_query tool",
           "description": "Create src/agents/tools/memory-service-query-tool.ts implementing the memory_service_query tool. Uses the Memory Service client.",
           "status": "completed",
-          "files_to_create": [
-            "src/agents/tools/memory-service-query-tool.ts"
-          ],
+          "files_to_create": ["src/agents/tools/memory-service-query-tool.ts"],
           "files_to_reference": [
             "src/agents/tools/memory-tool.ts",
             "src/memory/memory-service-client.ts"
@@ -218,9 +186,7 @@
           "title": "Register RAG tools in openclaw-tools.ts",
           "description": "Update src/agents/openclaw-tools.ts to create and include the RAG query tools when configured.",
           "status": "completed",
-          "files_to_modify": [
-            "src/agents/openclaw-tools.ts"
-          ],
+          "files_to_modify": ["src/agents/openclaw-tools.ts"],
           "files_to_reference": [
             "src/agents/tools/graphiti-search-tool.ts",
             "src/agents/tools/lightrag-query-tool.ts",
@@ -246,9 +212,7 @@
           "title": "Create rag-context-inject hook handler",
           "description": "Create src/hooks/bundled/rag-context-inject/handler.ts that queries all RAG sources and injects context into bootstrap files.",
           "status": "completed",
-          "files_to_create": [
-            "src/hooks/bundled/rag-context-inject/handler.ts"
-          ],
+          "files_to_create": ["src/hooks/bundled/rag-context-inject/handler.ts"],
           "files_to_reference": [
             "src/hooks/bundled/session-memory/handler.ts",
             "src/agents/bootstrap-hooks.ts"
@@ -271,9 +235,7 @@
           "title": "Create rag-context-inject HOOK.md metadata",
           "description": "Create src/hooks/bundled/rag-context-inject/HOOK.md with hook metadata including name, description, events, and requirements.",
           "status": "completed",
-          "files_to_create": [
-            "src/hooks/bundled/rag-context-inject/HOOK.md"
-          ],
+          "files_to_create": ["src/hooks/bundled/rag-context-inject/HOOK.md"],
           "files_to_reference": [
             "src/hooks/bundled/boot-md/HOOK.md",
             "src/hooks/bundled/session-memory/HOOK.md"
@@ -292,12 +254,8 @@
           "title": "Create RAG context formatting utilities",
           "description": "Create src/hooks/bundled/rag-context-inject/format.ts with functions to format RAG results into markdown context.",
           "status": "completed",
-          "files_to_create": [
-            "src/hooks/bundled/rag-context-inject/format.ts"
-          ],
-          "files_to_reference": [
-            "src/memory/status-format.ts"
-          ],
+          "files_to_create": ["src/hooks/bundled/rag-context-inject/format.ts"],
+          "files_to_reference": ["src/memory/status-format.ts"],
           "acceptance_criteria": [
             "formatGraphitiContext for entities/relationships",
             "formatLightRAGContext for document answers",
@@ -320,9 +278,7 @@
           "title": "Export memory clients from index",
           "description": "Update src/memory/index.ts to export the new RAG clients.",
           "status": "completed",
-          "files_to_modify": [
-            "src/memory/index.ts"
-          ],
+          "files_to_modify": ["src/memory/index.ts"],
           "acceptance_criteria": [
             "Export GraphitiClient",
             "Export LightRAGClient",
@@ -337,12 +293,8 @@
           "title": "Create RAG config resolver",
           "description": "Create src/agents/rag-search.ts with functions to resolve RAG service configuration from OpenClawConfig.",
           "status": "completed",
-          "files_to_create": [
-            "src/agents/rag-search.ts"
-          ],
-          "files_to_reference": [
-            "src/agents/memory-search.ts"
-          ],
+          "files_to_create": ["src/agents/rag-search.ts"],
+          "files_to_reference": ["src/agents/memory-search.ts"],
           "acceptance_criteria": [
             "resolveRAGSearchConfig function",
             "isGraphitiEnabled helper",
@@ -358,10 +310,7 @@
           "title": "Verify hook registration in loader",
           "description": "Verify that the rag-context-inject hook is discovered and registered by the hook loader system.",
           "status": "completed",
-          "files_to_reference": [
-            "src/hooks/loader.ts",
-            "src/hooks/workspace.ts"
-          ],
+          "files_to_reference": ["src/hooks/loader.ts", "src/hooks/workspace.ts"],
           "acceptance_criteria": [
             "Hook discovered in bundled hooks directory",
             "Hook registered for agent:bootstrap event",
@@ -418,9 +367,7 @@
           "title": "Add unit tests for rag-context-inject hook",
           "description": "Create test file for the RAG context injection hook.",
           "status": "pending",
-          "files_to_create": [
-            "src/hooks/bundled/rag-context-inject/handler.test.ts"
-          ],
+          "files_to_create": ["src/hooks/bundled/rag-context-inject/handler.test.ts"],
           "acceptance_criteria": [
             "Test hook triggers on agent:bootstrap",
             "Test context injection into bootstrapFiles",

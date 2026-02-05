@@ -69,12 +69,12 @@ The hook will query all enabled RAG services and combine their results.
 
 The hook supports optional configuration:
 
-| Option          | Type   | Default | Description                                      |
-| --------------- | ------ | ------- | ------------------------------------------------ |
-| `maxEntities`   | number | 20      | Maximum number of entities to retrieve           |
-| `maxRelations`  | number | 30      | Maximum number of relationships to retrieve      |
-| `maxMemories`   | number | 15      | Maximum number of memories to retrieve           |
-| `timeWindowDays`| number | 30      | Only retrieve context from the last N days       |
+| Option           | Type   | Default | Description                                 |
+| ---------------- | ------ | ------- | ------------------------------------------- |
+| `maxEntities`    | number | 20      | Maximum number of entities to retrieve      |
+| `maxRelations`   | number | 30      | Maximum number of relationships to retrieve |
+| `maxMemories`    | number | 15      | Maximum number of memories to retrieve      |
+| `timeWindowDays` | number | 30      | Only retrieve context from the last N days  |
 
 Example configuration:
 

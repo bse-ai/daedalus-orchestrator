@@ -6,7 +6,11 @@
  */
 
 import type { OpenClawConfig } from "../../../config/config.js";
-import type { GraphitiConfig, LightRAGConfig, MemoryServiceConfig } from "../../../config/types.rag.js";
+import type {
+  GraphitiConfig,
+  LightRAGConfig,
+  MemoryServiceConfig,
+} from "../../../config/types.rag.js";
 import { resolveHookConfig } from "../../config.js";
 import type { HookHandler } from "../../hooks.js";
 import type { AgentBootstrapHookContext } from "../../internal-hooks.js";
@@ -179,9 +183,7 @@ const injectRAGContext: HookHandler = async (event) => {
 
   // Check if any RAG service is enabled
   const anyEnabled =
-    graphitiConfig?.enabled ||
-    lightragConfig?.enabled ||
-    memoryServiceConfig?.enabled;
+    graphitiConfig?.enabled || lightragConfig?.enabled || memoryServiceConfig?.enabled;
 
   if (!anyEnabled) {
     return;

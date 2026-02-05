@@ -18,12 +18,14 @@
 ## Step 1: Start RAG Services
 
 ### Expected Services:
+
 - **Graphiti** → `http://localhost:8000`
 - **LightRAG** → `http://localhost:8001`
 - **Memory Service** → `http://localhost:8002`
 - **Neo4j** → `bolt://localhost:7687` (used by Graphiti)
 
 ### Start Command:
+
 ```bash
 # Navigate to the force-multiplier RAG stack directory
 # (Adjust path as needed for your environment)
@@ -37,6 +39,7 @@ docker-compose ps
 ```
 
 ### Health Check:
+
 ```bash
 # Check Graphiti
 curl http://localhost:8000/health
@@ -115,11 +118,13 @@ openclaw gateway start
 ### Test: Bootstrap Context Injection
 
 **Expected Behavior:**
+
 - The `rag-context-inject` hook should trigger on `agent:bootstrap` event
 - A synthetic bootstrap file `RAG_CONTEXT.md` should be injected
 - Context should include data from all three RAG sources
 
 **How to Verify:**
+
 1. Start a new agent session
 2. Check the agent's bootstrap files directory
 3. Look for `RAG_CONTEXT.md` (or check if it's injected in-memory)
@@ -129,6 +134,7 @@ openclaw gateway start
    - **Memory Service** (memories, scores)
 
 **Manual Inspection:**
+
 - Check agent logs for `[rag-context-inject]` messages
 - Verify no errors during RAG queries
 - Confirm all three services were queried
@@ -140,11 +146,13 @@ openclaw gateway start
 ### Test 5.1: `graphiti_search` Tool
 
 **Invoke the tool:**
+
 ```
 Use the graphiti_search tool to find entities related to "testing"
 ```
 
 **Expected Response:**
+
 ```json
 {
   "entities": [
@@ -169,6 +177,7 @@ Use the graphiti_search tool to find entities related to "testing"
 ```
 
 **Verify:**
+
 - ✅ Tool returns entities and relationships
 - ✅ Results are formatted as JSON
 - ✅ No errors or timeouts
@@ -178,18 +187,17 @@ Use the graphiti_search tool to find entities related to "testing"
 ### Test 5.2: `lightrag_query` Tool
 
 **Invoke the tool:**
+
 ```
 Use the lightrag_query tool in hybrid mode to answer: "What is the RAG integration architecture?"
 ```
 
 **Expected Response:**
+
 ```json
 {
   "answer": "The RAG integration architecture consists of...",
-  "sources": [
-    "doc-1: RAG Memory Integration Spec",
-    "doc-2: Graphiti API Documentation"
-  ],
+  "sources": ["doc-1: RAG Memory Integration Spec", "doc-2: Graphiti API Documentation"],
   "entities": ["Graphiti", "LightRAG", "Memory Service"],
   "confidence": 0.92,
   "mode": "hybrid"
@@ -197,6 +205,7 @@ Use the lightrag_query tool in hybrid mode to answer: "What is the RAG integrati
 ```
 
 **Verify:**
+
 - ✅ Tool returns answer with sources
 - ✅ Confidence score is present
 - ✅ Mode matches requested mode (hybrid)
@@ -207,11 +216,13 @@ Use the lightrag_query tool in hybrid mode to answer: "What is the RAG integrati
 ### Test 5.3: `memory_service_query` Tool
 
 **Invoke the tool:**
+
 ```
 Use the memory_service_query tool to search for "RAG integration"
 ```
 
 **Expected Response:**
+
 ```json
 {
   "memories": [
@@ -230,6 +241,7 @@ Use the memory_service_query tool to search for "RAG integration"
 ```
 
 **Verify:**
+
 - ✅ Tool returns memories with scores
 - ✅ Results are sorted by score (descending)
 - ✅ Metadata is included
@@ -247,12 +259,14 @@ docker stop graphiti-service
 ```
 
 **Expected Behavior:**
+
 - ✅ `graphiti_search` tool returns graceful error message
 - ✅ Agent session continues without crashing
 - ✅ `rag-context-inject` hook skips Graphiti but queries LightRAG and Memory Service
 - ✅ Logs show: `[rag-context-inject] Graphiti query failed: ...` or similar
 
 **Restart Service:**
+
 ```bash
 docker start graphiti-service
 ```
@@ -267,11 +281,13 @@ docker stop lightrag-service
 ```
 
 **Expected Behavior:**
+
 - ✅ `lightrag_query` tool returns graceful error message
 - ✅ Agent session continues
 - ✅ `rag-context-inject` hook skips LightRAG but queries Graphiti and Memory Service
 
 **Restart Service:**
+
 ```bash
 docker start lightrag-service
 ```
@@ -286,11 +302,13 @@ docker stop memory-service
 ```
 
 **Expected Behavior:**
+
 - ✅ `memory_service_query` tool returns graceful error message
 - ✅ Agent session continues
 - ✅ `rag-context-inject` hook skips Memory Service but queries Graphiti and LightRAG
 
 **Restart Service:**
+
 ```bash
 docker start memory-service
 ```
@@ -305,6 +323,7 @@ docker-compose down
 ```
 
 **Expected Behavior:**
+
 - ✅ Agent session starts normally
 - ✅ No RAG tools available (or they all return errors)
 - ✅ `rag-context-inject` hook does not crash
@@ -312,6 +331,7 @@ docker-compose down
 - ✅ Agent continues to function with local memory only
 
 **Restart Services:**
+
 ```bash
 docker-compose up -d
 ```
@@ -323,6 +343,7 @@ docker-compose up -d
 ### Test 7.1: Disable RAG Context Injection Hook
 
 Update `openclaw.json`:
+
 ```json
 {
   "hooks": {
@@ -338,6 +359,7 @@ Update `openclaw.json`:
 ```
 
 **Expected:**
+
 - ✅ No RAG context injected on session start
 - ✅ RAG_CONTEXT.md not created
 - ✅ Tools still available and functional
@@ -347,6 +369,7 @@ Update `openclaw.json`:
 ### Test 7.2: Disable Individual RAG Services
 
 Update `openclaw.json`:
+
 ```json
 {
   "agents": {
@@ -362,6 +385,7 @@ Update `openclaw.json`:
 ```
 
 **Expected:**
+
 - ✅ `graphiti_search` tool not available in tool list
 - ✅ Hook does not query Graphiti
 - ✅ Other services (LightRAG, Memory Service) still work
@@ -373,16 +397,19 @@ Update `openclaw.json`:
 ### List Available Tools
 
 In agent session, ask:
+
 ```
 What tools do you have available?
 ```
 
 **Expected Tools:**
+
 - `graphiti_search` (if Graphiti enabled)
 - `lightrag_query` (if LightRAG enabled)
 - `memory_service_query` (if Memory Service enabled)
 
 **Verify:**
+
 - ✅ All enabled RAG tools appear in the list
 - ✅ Disabled tools do NOT appear
 - ✅ Tool descriptions are clear and accurate
@@ -397,25 +424,31 @@ What tools do you have available?
    - Verify RAG_CONTEXT.md is injected
 
 2. **Ask a question requiring RAG retrieval**
+
    ```
    What do you know about the RAG integration project?
    ```
+
    - Agent should use RAG tools to search for relevant context
    - Verify tool calls appear in logs
 
 3. **Follow-up question**
+
    ```
    Show me entities related to "memory service"
    ```
+
    - Agent should use `graphiti_search` to find entities
 
 4. **Document query**
    ```
    Query the long-term document knowledge base for information about LightRAG architecture
    ```
+
    - Agent should use `lightrag_query` with appropriate mode
 
 **Verify:**
+
 - ✅ Agent successfully retrieves context from all RAG sources
 - ✅ Responses are coherent and accurate
 - ✅ No crashes or timeouts
@@ -445,6 +478,7 @@ What tools do you have available?
 ### Issue: Services not starting
 
 **Solution:**
+
 - Check Docker logs: `docker-compose logs`
 - Verify ports 8000, 8001, 8002, 7687 are not in use
 - Ensure Docker has sufficient resources
@@ -452,6 +486,7 @@ What tools do you have available?
 ### Issue: Tools not appearing
 
 **Solution:**
+
 - Verify `memorySearch` config in `openclaw.json`
 - Check that `enabled: true` for each service
 - Restart OpenClaw after config changes
@@ -459,6 +494,7 @@ What tools do you have available?
 ### Issue: Timeout errors
 
 **Solution:**
+
 - Increase timeout in config (default: 5000ms)
 - Check network connectivity to localhost
 - Verify services are responding to health checks
@@ -466,6 +502,7 @@ What tools do you have available?
 ### Issue: Empty RAG_CONTEXT.md
 
 **Solution:**
+
 - Verify services have data ingested
 - Check hook config `maxEntities`, `maxRelations`, etc.
 - Review logs for query errors
@@ -483,8 +520,8 @@ What tools do you have available?
 
 ## Sign-Off
 
-**Tester:** _________________
-**Date:** _________________
+**Tester:** ********\_********
+**Date:** ********\_********
 **Result:** ☐ PASS | ☐ FAIL | ☐ PARTIAL
 **Notes:**
 
