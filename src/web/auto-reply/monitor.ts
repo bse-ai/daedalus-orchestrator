@@ -431,7 +431,7 @@ export async function monitorWebChannel(
       },
       "web reconnect: scheduling retry",
     );
-    runtime.error(
+    runtime.log(
       `WhatsApp Web connection closed (status ${statusCode}). Retry ${reconnectAttempts}/${reconnectPolicy.maxAttempts || "∞"} in ${formatDurationMs(delay)}… (${errorStr})`,
     );
     await closeListener();
