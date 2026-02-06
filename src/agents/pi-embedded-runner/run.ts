@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
-import type { ThinkLevel } from "../../auto-reply/thinking.js";
 import type { RunEmbeddedPiAgentParams } from "./run/params.js";
 import type { EmbeddedPiAgentMeta, EmbeddedPiRunResult } from "./types.js";
+import { supportsXHighThinking, type ThinkLevel } from "../../auto-reply/thinking.js";
 import { enqueueCommandInLane } from "../../process/command-queue.js";
 import { resolveUserPath } from "../../utils.js";
 import { isMarkdownCapableMessageChannel } from "../../utils/message-channel.js";
@@ -165,7 +165,12 @@ export async function runEmbeddedPiAgent(
           : [undefined];
       let profileIndex = 0;
 
-      const initialThinkLevel = params.thinkLevel ?? "off";
+      const rawThinkLevel = params.thinkLevel ?? "off";
+      // Clamp xhigh to high for models that don't support it (avoids a wasted API call).
+      const initialThinkLevel =
+        rawThinkLevel === "xhigh" && !supportsXHighThinking(provider, modelId)
+          ? "high"
+          : rawThinkLevel;
       let thinkLevel = initialThinkLevel;
       const attemptedThinking = new Set<ThinkLevel>();
       let apiKeyInfo: ApiKeyInfo | null = null;

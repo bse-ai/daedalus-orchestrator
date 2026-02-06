@@ -6,11 +6,15 @@ import {
 } from "@mariozechner/pi-coding-agent";
 import fs from "node:fs/promises";
 import os from "node:os";
-import type { ReasoningLevel, ThinkLevel } from "../../auto-reply/thinking.js";
 import type { OpenClawConfig } from "../../config/config.js";
 import type { ExecElevatedDefaults } from "../bash-tools.js";
 import type { EmbeddedPiCompactResult } from "./types.js";
 import { resolveHeartbeatPrompt } from "../../auto-reply/heartbeat.js";
+import {
+  supportsXHighThinking,
+  type ReasoningLevel,
+  type ThinkLevel,
+} from "../../auto-reply/thinking.js";
 import { resolveChannelCapabilities } from "../../config/channel-capabilities.js";
 import { getMachineDisplayName } from "../../infra/machine-name.js";
 import { type enqueueCommand, enqueueCommandInLane } from "../../process/command-queue.js";
@@ -403,7 +407,11 @@ export async function compactEmbeddedPiSessionDirect(
         authStorage,
         modelRegistry,
         model,
-        thinkingLevel: mapThinkingLevel(params.thinkLevel),
+        thinkingLevel: mapThinkingLevel(
+          params.thinkLevel === "xhigh" && !supportsXHighThinking(provider, modelId)
+            ? "high"
+            : params.thinkLevel,
+        ),
         tools: builtInTools,
         customTools,
         sessionManager,
