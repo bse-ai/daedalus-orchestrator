@@ -7,7 +7,7 @@ import { formatCliCommand } from "../../cli/command-format.js";
 import { waitForever } from "../../cli/wait.js";
 import { loadConfig } from "../../config/config.js";
 import { logVerbose } from "../../globals.js";
-import { formatDurationMs } from "../../infra/format-duration.js";
+import { formatDurationPrecise } from "../../infra/format-time/format-duration.ts";
 import { enqueueSystemEvent } from "../../infra/system-events.js";
 import { registerUnhandledRejectionHandler } from "../../infra/unhandled-rejections.js";
 import { getChildLogger } from "../../logging.js";
@@ -431,8 +431,8 @@ export async function monitorWebChannel(
       },
       "web reconnect: scheduling retry",
     );
-    runtime.log(
-      `WhatsApp Web connection closed (status ${statusCode}). Retry ${reconnectAttempts}/${reconnectPolicy.maxAttempts || "∞"} in ${formatDurationMs(delay)}… (${errorStr})`,
+    runtime.error(
+      `WhatsApp Web connection closed (status ${statusCode}). Retry ${reconnectAttempts}/${reconnectPolicy.maxAttempts || "∞"} in ${formatDurationPrecise(delay)}… (${errorStr})`,
     );
     await closeListener();
     try {
