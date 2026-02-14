@@ -1,4 +1,9 @@
-import { timingSafeEqual } from "node:crypto";
+import { createHmac, timingSafeEqual } from "node:crypto";
+
+// HMAC both values with a fixed key so that comparison is always
+// constant-time regardless of input lengths, eliminating the
+// length-oracle side-channel.
+const HMAC_KEY = "openclaw-secret-equal-v1";
 
 export function safeEqualSecret(
   provided: string | undefined | null,
@@ -7,10 +12,7 @@ export function safeEqualSecret(
   if (typeof provided !== "string" || typeof expected !== "string") {
     return false;
   }
-  const providedBuffer = Buffer.from(provided);
-  const expectedBuffer = Buffer.from(expected);
-  if (providedBuffer.length !== expectedBuffer.length) {
-    return false;
-  }
-  return timingSafeEqual(providedBuffer, expectedBuffer);
+  const providedDigest = createHmac("sha256", HMAC_KEY).update(provided).digest();
+  const expectedDigest = createHmac("sha256", HMAC_KEY).update(expected).digest();
+  return timingSafeEqual(providedDigest, expectedDigest);
 }

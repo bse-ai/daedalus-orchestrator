@@ -161,6 +161,32 @@ function buildDocsSection(params: { docsPath?: string; isMinimal: boolean; readT
   ];
 }
 
+function buildShellEnvironmentSection(params: { os?: string; shell?: string }) {
+  const os = params.os?.toLowerCase() ?? "";
+  const shell = params.shell?.toLowerCase() ?? "";
+  if (!os.includes("windows") && shell !== "powershell" && shell !== "pwsh") {
+    return [];
+  }
+  return [
+    "## Shell Environment (Windows / PowerShell)",
+    "Commands run in PowerShell. Do NOT use Unix utilities (grep, head, tail, wc, find, cat, sed, awk). Use PowerShell equivalents:",
+    '- grep → Select-String  (e.g. Get-ChildItem -Recurse -Filter "*.md" | Select-String -Pattern "keyword")',
+    '- find → Get-ChildItem -Recurse -Filter "*.ext"',
+    "- head -N → Select-Object -First N",
+    "- tail -N → Select-Object -Last N",
+    "- wc -l → (Get-Content file).Count  or  Measure-Object -Line",
+    "- cat → Get-Content",
+    "- ls → Get-ChildItem",
+    "- which → Get-Command",
+    "- rm -rf → Remove-Item -Recurse -Force",
+    "Piping: use | between cmdlets. Use ; to chain independent commands. && is not supported.",
+    'String interpolation: in double-quoted strings, always wrap variable names in braces when followed by : or special chars — write "${key}:" not "$key:" (PowerShell treats $name: as a drive-qualified variable reference). Prefer single-quoted strings when no interpolation is needed.',
+    "Encoding: when running Python, prefix with $env:PYTHONIOENCODING='utf-8'; to avoid cp1252 errors.",
+    "Path separators: use backslash (\\) or forward slash (/) — PowerShell accepts both.",
+    "",
+  ];
+}
+
 export function buildAgentSystemPrompt(params: {
   workspaceDir: string;
   defaultThinkLevel?: ThinkLevel;
@@ -404,6 +430,16 @@ export function buildAgentSystemPrompt(params: {
         ].join("\n"),
     "TOOLS.md does not control tool availability; it is user guidance for how to use external tools.",
     "If a task is more complex or takes longer, spawn a sub-agent. It will do the work for you and ping you when it's done. You can always check up on it.",
+    "",
+    ...buildShellEnvironmentSection({ os: runtimeInfo?.os, shell: runtimeInfo?.shell }),
+    "## Resource Cleanup",
+    "IMPORTANT: Always clean up after yourself to prevent resource leaks:",
+    "- Kill processes when done: use Ctrl+C or process.kill",
+    "- Background tasks: use process tool to monitor and clean up old sessions",
+    "- Temp files: clean up temporary files created during execution",
+    "- Long-running operations: prefer `process` tool to avoid accumulating resources",
+    "- Never leave processes running indefinitely without user awareness",
+    "Resource leaks can cause the gateway to run out of memory and crash.",
     "",
     "## Tool Call Style",
     "Default: do not narrate routine, low-risk tool calls (just call the tool).",

@@ -226,11 +226,17 @@ function isSafeRelativePath(relPath: string) {
   if (!relPath) {
     return false;
   }
-  const normalized = path.posix.normalize(relPath);
-  if (normalized.startsWith("../") || normalized === "..") {
+  if (relPath.includes("\0")) {
     return false;
   }
-  if (normalized.includes("\0")) {
+  // Use platform-aware normalize to catch both forward and back-slash traversal
+  const normalized = path.normalize(relPath);
+  if (normalized.startsWith("..") || normalized.includes(`${path.sep}..`)) {
+    return false;
+  }
+  // Also check posix-style to cover mixed-separator inputs on Windows
+  const posixNormalized = path.posix.normalize(relPath);
+  if (posixNormalized.startsWith("../") || posixNormalized === "..") {
     return false;
   }
   return true;

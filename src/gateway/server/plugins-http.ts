@@ -25,6 +25,12 @@ export function createGatewayPluginRequestHandler(params: {
       const url = new URL(req.url ?? "/", "http://localhost");
       const route = routes.find((entry) => entry.path === url.pathname);
       if (route) {
+        // Security audit: plugin HTTP routes are dispatched without gateway-level
+        // auth by design (plugins own their auth). Log for visibility so operators
+        // can audit unprotected routes.
+        log.debug(
+          `plugin http route dispatch: ${route.pluginId ?? "unknown"} path=${url.pathname}`,
+        );
         try {
           await route.handler(req, res);
           return true;

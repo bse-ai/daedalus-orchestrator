@@ -59,6 +59,81 @@ import {
 import { callGatewayTool } from "./tools/gateway.js";
 import { listNodes, resolveNodeIdFromList } from "./tools/nodes-utils.js";
 
+// NOTE: DANGEROUS_HOST_ENV_VARS, DANGEROUS_HOST_ENV_PREFIXES, and validateHostEnv
+// live in bash-tools.exec-runtime.ts and are imported above.
+
+// Security: Blocklist of package-manager install commands that modify the host
+// system without explicit user approval. These can introduce supply-chain risks
+// (typosquatting, compromised packages) when executed autonomously by an agent.
+const BLOCKED_INSTALL_PATTERNS = [
+  /\bpip\s+install\b/i,
+  /\bpip3\s+install\b/i,
+  /\bpython\S*\s+-m\s+pip\s+install\b/i,
+  /\bnpm\s+install\b/i,
+  /\bnpm\s+i\b/i,
+  /\byarn\s+add\b/i,
+  /\bpnpm\s+(add|install)\b/i,
+  /\bgem\s+install\b/i,
+  /\bcargo\s+install\b/i,
+  /\bapt-get\s+install\b/i,
+  /\bapt\s+install\b/i,
+  /\bbrew\s+install\b/i,
+  /\bchoco\s+install\b/i,
+  /\bwinget\s+install\b/i,
+];
+
+// Patterns that indicate shell evasion techniques which should be blocked on
+// host execution. These could be used to bypass the install-command blocklist
+// or execute arbitrary decoded payloads.
+const BLOCKED_EVASION_PATTERNS = [
+  /\bbase64\s+(-d|--decode)\b/i,
+  /\beval\s*\$\(.*base64/i,
+  /\|\s*sh\s*$/,
+  /\|\s*bash\s*$/,
+  /\bpython\S*\s+-c\s+.*__import__/i,
+  /\bcurl\s+.*\|\s*(sh|bash)\b/i,
+  /\bwget\s+.*\|\s*(sh|bash)\b/i,
+];
+
+function isBlockedInstallCommand(command: string): string | null {
+  for (const pattern of BLOCKED_INSTALL_PATTERNS) {
+    if (pattern.test(command)) {
+      return pattern.source;
+    }
+  }
+  return null;
+}
+
+function isBlockedEvasionPattern(command: string): string | null {
+  for (const pattern of BLOCKED_EVASION_PATTERNS) {
+    if (pattern.test(command)) {
+      return pattern.source;
+    }
+  }
+  return null;
+}
+
+// Environment variables that could affect the Docker daemon itself or escape
+// the container boundary. These are blocked even inside sandbox containers.
+const DANGEROUS_SANDBOX_ENV_VARS = new Set([
+  "DOCKER_HOST",
+  "DOCKER_CONFIG",
+  "DOCKER_CERT_PATH",
+  "DOCKER_TLS_VERIFY",
+  "CONTAINERD_ADDRESS",
+]);
+
+// Subset validation for sandbox: blocks vars that could affect the Docker daemon.
+function validateSandboxEnv(env: Record<string, string>): void {
+  for (const key of Object.keys(env)) {
+    if (DANGEROUS_SANDBOX_ENV_VARS.has(key.toUpperCase())) {
+      throw new Error(
+        `Security Violation: Environment variable '${key}' is forbidden (could affect container runtime).`,
+      );
+    }
+  }
+}
+
 export type ExecToolDefaults = {
   host?: ExecHost;
   security?: ExecSecurity;
@@ -271,6 +346,25 @@ export function createExecTool(
         ask = "off";
       }
 
+      // Even in elevated full mode, block package-manager install commands and
+      // evasion techniques on the host to prevent supply-chain attacks.
+      if (host !== "sandbox") {
+        const blockedPattern = isBlockedInstallCommand(params.command);
+        if (blockedPattern) {
+          throw new Error(
+            `exec denied: package-manager install commands are blocked on host execution (matched ${blockedPattern}). ` +
+              `Install packages manually or in a sandboxed environment.`,
+          );
+        }
+        const evasionPattern = isBlockedEvasionPattern(params.command);
+        if (evasionPattern) {
+          throw new Error(
+            `exec denied: command matches a blocked evasion pattern (${evasionPattern}). ` +
+              `This pattern could be used to bypass security controls.`,
+          );
+        }
+      }
+
       const sandbox = host === "sandbox" ? defaults?.sandbox : undefined;
       const rawWorkdir = params.workdir?.trim() || defaults?.cwd || process.cwd();
       let workdir = rawWorkdir;
@@ -289,10 +383,15 @@ export function createExecTool(
 
       const baseEnv = coerceEnv(process.env);
 
-      // Logic: Sandbox gets raw env. Host (gateway/node) must pass validation.
-      // We validate BEFORE merging to prevent any dangerous vars from entering the stream.
-      if (host !== "sandbox" && params.env) {
-        validateHostEnv(params.env);
+      // Validate env BEFORE merging to prevent dangerous vars from entering the stream.
+      // Host (gateway/node) gets full validation; sandbox gets a subset check for
+      // variables that could affect the Docker daemon or container runtime.
+      if (params.env) {
+        if (host === "sandbox") {
+          validateSandboxEnv(params.env);
+        } else {
+          validateHostEnv(params.env);
+        }
       }
 
       const mergedEnv = params.env ? { ...baseEnv, ...params.env } : baseEnv;
@@ -322,6 +421,20 @@ export function createExecTool(
         const askFallback = approvals.agent.askFallback;
         if (hostSecurity === "deny") {
           throw new Error("exec denied: host=node security=deny");
+        }
+        const blockedPattern = isBlockedInstallCommand(params.command);
+        if (blockedPattern) {
+          throw new Error(
+            `exec denied: package-manager install commands are blocked on host execution (matched ${blockedPattern}). ` +
+              `Install packages manually or in a sandboxed environment.`,
+          );
+        }
+        const evasionPattern = isBlockedEvasionPattern(params.command);
+        if (evasionPattern) {
+          throw new Error(
+            `exec denied: command matches a blocked evasion pattern (${evasionPattern}). ` +
+              `This pattern could be used to bypass security controls.`,
+          );
         }
         const boundNode = defaults?.node?.trim();
         const requestedNode = params.node?.trim();
@@ -600,6 +713,20 @@ export function createExecTool(
         const askFallback = approvals.agent.askFallback;
         if (hostSecurity === "deny") {
           throw new Error("exec denied: host=gateway security=deny");
+        }
+        const blockedPattern = isBlockedInstallCommand(params.command);
+        if (blockedPattern) {
+          throw new Error(
+            `exec denied: package-manager install commands are blocked on host execution (matched ${blockedPattern}). ` +
+              `Install packages manually or in a sandboxed environment.`,
+          );
+        }
+        const evasionPattern = isBlockedEvasionPattern(params.command);
+        if (evasionPattern) {
+          throw new Error(
+            `exec denied: command matches a blocked evasion pattern (${evasionPattern}). ` +
+              `This pattern could be used to bypass security controls.`,
+          );
         }
         const allowlistEval = evaluateShellAllowlist({
           command: params.command,

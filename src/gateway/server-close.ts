@@ -70,6 +70,15 @@ export function createGatewayCloseHandler(params: {
     await stopGmailWatcher();
     params.cron.stop();
     params.heartbeatRunner.stop();
+
+    // CRITICAL: Clean up all running bash processes
+    try {
+      const { killAllRunningSessions } = await import("../agents/bash-process-registry.js");
+      killAllRunningSessions();
+    } catch {
+      /* registry may not be loaded */
+    }
+
     for (const timer of params.nodePresenceTimers.values()) {
       clearInterval(timer);
     }

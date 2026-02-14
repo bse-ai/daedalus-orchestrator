@@ -160,35 +160,22 @@ export function markBackgrounded(session: ProcessSession) {
 function moveToFinished(session: ProcessSession, status: ProcessStatus) {
   runningSessions.delete(session.id);
 
+  // CRITICAL FIX: Always ensure child process is cleaned up
+  if (session.child && !session.exited) {
+    try {
+      session.child.kill("SIGKILL");
+    } catch {
+      // Process may have already exited - safe to ignore
+    }
+  }
+
   // Clean up child process stdio streams to prevent FD leaks
   if (session.child) {
-    // Destroy stdio streams to release file descriptors
     session.child.stdin?.destroy?.();
     session.child.stdout?.destroy?.();
     session.child.stderr?.destroy?.();
-
-    // Remove all event listeners to prevent memory leaks
     session.child.removeAllListeners();
-
-    // Clear the reference
-    delete session.child;
-  }
-
-  // Clean up stdin wrapper - call destroy if available, otherwise just remove reference
-  if (session.stdin) {
-    // Try to call destroy/end method if exists
-    if (typeof session.stdin.destroy === "function") {
-      session.stdin.destroy();
-    } else if (typeof session.stdin.end === "function") {
-      session.stdin.end();
-    }
-    // Only set flag if writable
-    try {
-      (session.stdin as { destroyed?: boolean }).destroyed = true;
-    } catch {
-      // Ignore if read-only
-    }
-    delete session.stdin;
+    session.child = undefined;
   }
 
   if (!session.backgrounded) {
@@ -267,6 +254,22 @@ export function clearFinished() {
   finishedSessions.clear();
 }
 
+export function getProcessStats() {
+  return {
+    running: runningSessions.size,
+    finished: finishedSessions.size,
+    total: runningSessions.size + finishedSessions.size,
+    runningSessions: Array.from(runningSessions.values()).map((s) => ({
+      id: s.id,
+      pid: s.pid,
+      command: s.command.slice(0, 80),
+      startedAt: new Date(s.startedAt).toISOString(),
+      backgrounded: s.backgrounded,
+      exited: s.exited,
+    })),
+  };
+}
+
 export function resetProcessRegistryForTests() {
   runningSessions.clear();
   finishedSessions.clear();
@@ -297,6 +300,35 @@ function startSweeper() {
   }
   sweeper = setInterval(pruneFinishedSessions, Math.max(30_000, jobTtlMs / 6));
   sweeper.unref?.();
+
+  // Process monitoring to detect leaks early
+  const monitor = setInterval(
+    () => {
+      const runningCount = runningSessions.size;
+      const finishedCount = finishedSessions.size;
+      const now = new Date().toISOString();
+
+      console.log(`[${now}] Process stats: ${runningCount} running, ${finishedCount} finished`);
+
+      if (runningCount > 10) {
+        console.warn(`[PROCESS LEAK WARNING] ${runningCount} running sessions`);
+        // Redact command content to avoid leaking secrets (API keys, passwords in args).
+        // Log only session ID and PID for identification.
+        const details = Array.from(runningSessions.values())
+          .map(
+            (s) =>
+              `  - ${s.id} (pid:${s.pid}, age:${Math.round((Date.now() - s.startedAt) / 1000)}s)`,
+          )
+          .join("\n");
+        console.warn("Running sessions:\n" + details);
+      }
+      if (finishedCount > 50) {
+        console.warn(`[MEMORY WARNING] ${finishedCount} finished sessions`);
+      }
+    },
+    5 * 60 * 1000,
+  );
+  monitor.unref?.();
 }
 
 function stopSweeper() {
@@ -306,3 +338,37 @@ function stopSweeper() {
   clearInterval(sweeper);
   sweeper = null;
 }
+
+export function killAllRunningSessions() {
+  const sessions = Array.from(runningSessions.values());
+  let killedCount = 0;
+
+  for (const session of sessions) {
+    if (session.child && !session.exited) {
+      try {
+        session.child.kill("SIGKILL");
+        killedCount++;
+      } catch {
+        // Process may have already exited
+      }
+    }
+  }
+
+  runningSessions.clear();
+  finishedSessions.clear();
+
+  if (killedCount > 0) {
+    console.log(`[SHUTDOWN] Killed ${killedCount} orphaned process(es)`);
+  }
+}
+
+function registerShutdownHandlers() {
+  const cleanup = () => {
+    killAllRunningSessions();
+  };
+  process.on("SIGTERM", cleanup);
+  process.on("SIGINT", cleanup);
+  process.on("beforeExit", cleanup);
+}
+
+registerShutdownHandlers();

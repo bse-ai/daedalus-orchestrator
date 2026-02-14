@@ -294,6 +294,27 @@ export function loadOpenClawPlugins(options: PluginLoadOptions = {}): PluginRegi
       continue;
     }
 
+    // Security: Reject plugin sources from temp or sandbox directories that
+    // could have been planted by a sandboxed agent to achieve code execution.
+    const normalizedSource = path.resolve(candidate.source).replace(/\\/g, "/");
+    if (
+      normalizedSource.includes("/tmp/") ||
+      normalizedSource.includes("/var/tmp/") ||
+      /[\\/]\.sandbox[\\/]/.test(candidate.source)
+    ) {
+      record.status = "error";
+      record.error = "plugin source in sandbox/temp directory is forbidden";
+      registry.plugins.push(record);
+      seenIds.set(pluginId, candidate.origin);
+      registry.diagnostics.push({
+        level: "error",
+        pluginId: record.id,
+        source: record.source,
+        message: record.error,
+      });
+      continue;
+    }
+
     let mod: OpenClawPluginModule | null = null;
     try {
       mod = jiti(candidate.source) as OpenClawPluginModule;
