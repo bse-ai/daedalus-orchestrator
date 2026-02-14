@@ -7,6 +7,7 @@ import { agentCommand } from "../commands/agent.js";
 import { emitAgentEvent, onAgentEvent } from "../infra/agent-events.js";
 import { logWarn } from "../logger.js";
 import { defaultRuntime } from "../runtime.js";
+import { wrapExternalContent } from "../security/external-content.js";
 import { authorizeGatewayConnect, type ResolvedGatewayAuth } from "./auth.js";
 import {
   readJsonBodyOrError,
@@ -152,7 +153,10 @@ function buildAgentPrompt(messagesUnknown: unknown): {
 
   return {
     message,
-    extraSystemPrompt: systemParts.length > 0 ? systemParts.join("\n\n") : undefined,
+    extraSystemPrompt:
+      systemParts.length > 0
+        ? wrapExternalContent(systemParts.join("\n\n"), { source: "api" })
+        : undefined,
   };
 }
 

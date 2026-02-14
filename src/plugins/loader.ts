@@ -296,11 +296,13 @@ export function loadOpenClawPlugins(options: PluginLoadOptions = {}): PluginRegi
 
     // Security: Reject plugin sources from temp or sandbox directories that
     // could have been planted by a sandboxed agent to achieve code execution.
-    const normalizedSource = path.resolve(candidate.source).replace(/\\/g, "/");
+    const normalizedSource = path.resolve(candidate.source).replace(/\\/g, "/").toLowerCase();
     if (
       normalizedSource.includes("/tmp/") ||
       normalizedSource.includes("/var/tmp/") ||
-      /[\\/]\.sandbox[\\/]/.test(candidate.source)
+      normalizedSource.includes("/appdata/local/temp/") ||
+      normalizedSource.includes("/windows/temp/") ||
+      /[\\/]\.sandbox[\\/]/i.test(candidate.source)
     ) {
       record.status = "error";
       record.error = "plugin source in sandbox/temp directory is forbidden";

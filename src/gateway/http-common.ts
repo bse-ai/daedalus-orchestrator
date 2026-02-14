@@ -46,8 +46,10 @@ export function sendGatewayAuthFailure(res: ServerResponse, authResult: GatewayA
 }
 
 export function sendInvalidRequest(res: ServerResponse, message: string) {
+  // Sanitize error message to avoid leaking internal details (paths, stack traces).
+  const safeMessage = message.length > 200 ? message.slice(0, 200) + "..." : message;
   sendJson(res, 400, {
-    error: { message, type: "invalid_request_error" },
+    error: { message: safeMessage, type: "invalid_request_error" },
   });
 }
 

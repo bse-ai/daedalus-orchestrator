@@ -73,6 +73,7 @@ const runningSessions = new Map<string, ProcessSession>();
 const finishedSessions = new Map<string, FinishedSession>();
 
 let sweeper: NodeJS.Timeout | null = null;
+let monitorTimer: NodeJS.Timeout | null = null;
 
 function isSessionIdTaken(id: string) {
   return runningSessions.has(id) || finishedSessions.has(id);
@@ -302,7 +303,10 @@ function startSweeper() {
   sweeper.unref?.();
 
   // Process monitoring to detect leaks early
-  const monitor = setInterval(
+  if (monitorTimer) {
+    clearInterval(monitorTimer);
+  }
+  monitorTimer = setInterval(
     () => {
       const runningCount = runningSessions.size;
       const finishedCount = finishedSessions.size;
@@ -328,10 +332,14 @@ function startSweeper() {
     },
     5 * 60 * 1000,
   );
-  monitor.unref?.();
+  monitorTimer.unref?.();
 }
 
 function stopSweeper() {
+  if (monitorTimer) {
+    clearInterval(monitorTimer);
+    monitorTimer = null;
+  }
   if (!sweeper) {
     return;
   }

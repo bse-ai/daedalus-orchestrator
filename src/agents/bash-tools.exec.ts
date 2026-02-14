@@ -88,11 +88,15 @@ const BLOCKED_INSTALL_PATTERNS = [
 const BLOCKED_EVASION_PATTERNS = [
   /\bbase64\s+(-d|--decode)\b/i,
   /\beval\s*\$\(.*base64/i,
-  /\|\s*sh\s*$/,
-  /\|\s*bash\s*$/,
+  /\|\s*(sh|bash|zsh|dash|ksh)\s*$/,
   /\bpython\S*\s+-c\s+.*__import__/i,
-  /\bcurl\s+.*\|\s*(sh|bash)\b/i,
-  /\bwget\s+.*\|\s*(sh|bash)\b/i,
+  /\bperl\s+-e\b/i,
+  /\bruby\s+-e\b/i,
+  /\bnode\s+-e\b/i,
+  /\bcurl\s+.*\|\s*(sh|bash|zsh|dash)\b/i,
+  /\bwget\s+.*\|\s*(sh|bash|zsh|dash)\b/i,
+  />\(.*\)/, // process substitution
+  /\bsource\s+<\(/, // bash process substitution with source
 ];
 
 function isBlockedInstallCommand(command: string): string | null {

@@ -44,6 +44,14 @@ const SCANNABLE_EXTENSIONS = new Set([
   ".cts",
   ".jsx",
   ".tsx",
+  ".sh",
+  ".bash",
+  ".py",
+  ".rb",
+  ".pl",
+  ".bat",
+  ".cmd",
+  ".ps1",
 ]);
 
 const DEFAULT_MAX_SCAN_FILES = 500;

@@ -1,3 +1,5 @@
+import { randomInt } from "node:crypto";
+
 const SLUG_ADJECTIVES = [
   "amber",
   "briny",
@@ -101,7 +103,7 @@ const SLUG_NOUNS = [
 ];
 
 function randomChoice(values: string[], fallback: string) {
-  return values[Math.floor(Math.random() * values.length)] ?? fallback;
+  return values[randomInt(values.length)] ?? fallback;
 }
 
 function createSlugBase(words = 2) {
