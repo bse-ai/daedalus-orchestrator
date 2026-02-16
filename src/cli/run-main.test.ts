@@ -41,12 +41,12 @@ describe("rewriteUpdateFlagArgv", () => {
 
 describe("shouldRegisterPrimarySubcommand", () => {
   it("skips eager primary registration for help/version invocations", () => {
-    expect(shouldRegisterPrimarySubcommand(["node", "openclaw", "status", "--help"])).toBe(false);
-    expect(shouldRegisterPrimarySubcommand(["node", "openclaw", "-V"])).toBe(false);
+    expect(shouldRegisterPrimarySubcommand(["node", "forge-orchestrator", "status", "--help"])).toBe(false);
+    expect(shouldRegisterPrimarySubcommand(["node", "forge-orchestrator", "-V"])).toBe(false);
   });
 
   it("keeps eager primary registration for regular command runs", () => {
-    expect(shouldRegisterPrimarySubcommand(["node", "openclaw", "status"])).toBe(true);
+    expect(shouldRegisterPrimarySubcommand(["node", "forge-orchestrator", "status"])).toBe(true);
   });
 });
 
@@ -54,7 +54,7 @@ describe("shouldSkipPluginCommandRegistration", () => {
   it("skips plugin registration for root help/version", () => {
     expect(
       shouldSkipPluginCommandRegistration({
-        argv: ["node", "openclaw", "--help"],
+        argv: ["node", "forge-orchestrator", "--help"],
         primary: null,
         hasBuiltinPrimary: false,
       }),
@@ -64,7 +64,7 @@ describe("shouldSkipPluginCommandRegistration", () => {
   it("skips plugin registration for builtin subcommand help", () => {
     expect(
       shouldSkipPluginCommandRegistration({
-        argv: ["node", "openclaw", "config", "--help"],
+        argv: ["node", "forge-orchestrator", "config", "--help"],
         primary: "config",
         hasBuiltinPrimary: true,
       }),
@@ -74,7 +74,7 @@ describe("shouldSkipPluginCommandRegistration", () => {
   it("keeps plugin registration for non-builtin help", () => {
     expect(
       shouldSkipPluginCommandRegistration({
-        argv: ["node", "openclaw", "voicecall", "--help"],
+        argv: ["node", "forge-orchestrator", "voicecall", "--help"],
         primary: "voicecall",
         hasBuiltinPrimary: false,
       }),

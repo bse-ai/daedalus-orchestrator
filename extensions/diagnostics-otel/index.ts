@@ -1,5 +1,5 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
+import type { ForgeOrchestratorPluginApi } from "forge-orchestrator/plugin-sdk";
+import { emptyPluginConfigSchema } from "forge-orchestrator/plugin-sdk";
 import { createDiagnosticsOtelService } from "./src/service.js";
 
 const plugin = {
@@ -7,7 +7,7 @@ const plugin = {
   name: "Diagnostics OpenTelemetry",
   description: "Export diagnostics events to OpenTelemetry",
   configSchema: emptyPluginConfigSchema(),
-  register(api: OpenClawPluginApi) {
+  register(api: ForgeOrchestratorPluginApi) {
     api.registerService(createDiagnosticsOtelService());
   },
 };

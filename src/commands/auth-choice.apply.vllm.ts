@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/config.js";
+import type { ForgeOrchestratorConfig } from "../config/config.js";
 import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from "./auth-choice.apply.js";
 import { upsertAuthProfileWithLock } from "../agents/auth-profiles.js";
 
@@ -12,7 +12,7 @@ const VLLM_DEFAULT_COST = {
   cacheWrite: 0,
 };
 
-function applyVllmDefaultModel(cfg: OpenClawConfig, modelRef: string): OpenClawConfig {
+function applyVllmDefaultModel(cfg: ForgeOrchestratorConfig, modelRef: string): ForgeOrchestratorConfig {
   const existingModel = cfg.agents?.defaults?.model;
   const fallbacks =
     existingModel && typeof existingModel === "object" && "fallbacks" in existingModel
@@ -71,7 +71,7 @@ export async function applyAuthChoiceVllm(
     agentDir: params.agentDir,
   });
 
-  const nextConfig: OpenClawConfig = {
+  const nextConfig: ForgeOrchestratorConfig = {
     ...params.config,
     models: {
       ...params.config.models,

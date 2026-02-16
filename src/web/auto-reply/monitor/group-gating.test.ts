@@ -8,7 +8,7 @@ const baseConfig = {
       groups: { "*": { requireMention: true } },
     },
   },
-  session: { store: "/tmp/openclaw-sessions.json" },
+  session: { store: "/tmp/forge-orchestrator-sessions.json" },
 } as const;
 
 describe("applyGroupGating", () => {

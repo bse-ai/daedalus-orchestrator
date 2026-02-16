@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
-import type { OpenClawConfig } from "../../config/config.js";
+import type { ForgeOrchestratorConfig } from "../../config/config.js";
 import { createLightRAGQueryTool } from "./lightrag-query-tool.js";
 
 const mocks = vi.hoisted(() => ({
@@ -30,7 +30,7 @@ describe("lightrag_query tool", () => {
   it("returns null when memorySearch config is missing", () => {
     const config = {
       agents: {},
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createLightRAGQueryTool({ config });
     expect(tool).toBeNull();
@@ -47,7 +47,7 @@ describe("lightrag_query tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createLightRAGQueryTool({ config });
     expect(tool).toBeNull();
@@ -65,7 +65,7 @@ describe("lightrag_query tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createLightRAGQueryTool({ config });
     expect(tool).not.toBeNull();
@@ -91,7 +91,7 @@ describe("lightrag_query tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createLightRAGQueryTool({ config });
     expect(tool).not.toBeNull();
@@ -129,7 +129,7 @@ describe("lightrag_query tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createLightRAGQueryTool({ config });
     expect(tool).not.toBeNull();
@@ -168,7 +168,7 @@ describe("lightrag_query tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createLightRAGQueryTool({ config });
     expect(tool).not.toBeNull();
@@ -206,7 +206,7 @@ describe("lightrag_query tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createLightRAGQueryTool({ config });
     expect(tool).not.toBeNull();
@@ -247,7 +247,7 @@ describe("lightrag_query tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createLightRAGQueryTool({ config });
     expect(tool).not.toBeNull();
@@ -287,7 +287,7 @@ describe("lightrag_query tool", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createLightRAGQueryTool({
       config,

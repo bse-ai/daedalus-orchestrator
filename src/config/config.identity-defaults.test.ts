@@ -19,7 +19,7 @@ function snapshotHomeEnv(): HomeEnvSnapshot {
     userProfile: process.env.USERPROFILE,
     homeDrive: process.env.HOMEDRIVE,
     homePath: process.env.HOMEPATH,
-    stateDir: process.env.OPENCLAW_STATE_DIR,
+    stateDir: process.env.FORGE_ORCH_STATE_DIR,
   };
 }
 
@@ -35,7 +35,7 @@ function restoreHomeEnv(snapshot: HomeEnvSnapshot) {
   restoreKey("USERPROFILE", snapshot.userProfile);
   restoreKey("HOMEDRIVE", snapshot.homeDrive);
   restoreKey("HOMEPATH", snapshot.homePath);
-  restoreKey("OPENCLAW_STATE_DIR", snapshot.stateDir);
+  restoreKey("FORGE_ORCH_STATE_DIR", snapshot.stateDir);
 }
 
 describe("config identity defaults", () => {
@@ -43,7 +43,7 @@ describe("config identity defaults", () => {
   let fixtureCount = 0;
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-config-identity-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "forge-orchestrator-config-identity-"));
   });
 
   afterAll(async () => {
@@ -51,10 +51,10 @@ describe("config identity defaults", () => {
   });
 
   const writeAndLoadConfig = async (home: string, config: Record<string, unknown>) => {
-    const configDir = path.join(home, ".openclaw");
+    const configDir = path.join(home, ".forge-orchestrator");
     await fs.mkdir(configDir, { recursive: true });
     await fs.writeFile(
-      path.join(configDir, "openclaw.json"),
+      path.join(configDir, "forge-orchestrator.json"),
       JSON.stringify(config, null, 2),
       "utf-8",
     );
@@ -63,12 +63,12 @@ describe("config identity defaults", () => {
 
   const withTempHome = async <T>(fn: (home: string) => Promise<T>): Promise<T> => {
     const home = path.join(fixtureRoot, `home-${fixtureCount++}`);
-    await fs.mkdir(path.join(home, ".openclaw"), { recursive: true });
+    await fs.mkdir(path.join(home, ".forge-orchestrator"), { recursive: true });
 
     const snapshot = snapshotHomeEnv();
     process.env.HOME = home;
     process.env.USERPROFILE = home;
-    process.env.OPENCLAW_STATE_DIR = path.join(home, ".openclaw");
+    process.env.FORGE_ORCH_STATE_DIR = path.join(home, ".forge-orchestrator");
 
     if (process.platform === "win32") {
       const match = home.match(/^([A-Za-z]:)(.*)$/);
@@ -137,7 +137,7 @@ describe("config identity defaults", () => {
                 theme: "space lobster",
                 emoji: "🦞",
               },
-              groupChat: { mentionPatterns: ["@openclaw"] },
+              groupChat: { mentionPatterns: ["@forge-orchestrator"] },
             },
           ],
         },
@@ -147,7 +147,7 @@ describe("config identity defaults", () => {
       });
 
       expect(cfg.messages?.responsePrefix).toBe("✅");
-      expect(cfg.agents?.list?.[0]?.groupChat?.mentionPatterns).toEqual(["@openclaw"]);
+      expect(cfg.agents?.list?.[0]?.groupChat?.mentionPatterns).toEqual(["@forge-orchestrator"]);
     });
   });
 
@@ -155,7 +155,7 @@ describe("config identity defaults", () => {
     await withTempHome(async (home) => {
       const cfg = await writeAndLoadConfig(home, {
         messages: {
-          messagePrefix: "[openclaw]",
+          messagePrefix: "[forge-orchestrator]",
           responsePrefix: "🦞",
         },
         channels: {
@@ -248,7 +248,7 @@ describe("config identity defaults", () => {
             {
               id: "main",
               identity: {
-                name: "OpenClaw",
+                name: "ForgeOrchestrator",
                 theme: "space lobster",
                 emoji: "🦞",
               },

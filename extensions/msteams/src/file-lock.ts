@@ -23,7 +23,7 @@ type HeldLock = {
   lockPath: string;
 };
 
-const HELD_LOCKS_KEY = Symbol.for("openclaw.msteamsFileLockHeldLocks");
+const HELD_LOCKS_KEY = Symbol.for("forge-orchestrator.msteamsFileLockHeldLocks");
 
 function resolveHeldLocks(): Map<string, HeldLock> {
   const proc = process as NodeJS.Process & {

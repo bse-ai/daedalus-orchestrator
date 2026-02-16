@@ -18,7 +18,7 @@ function snapshotHomeEnv(): HomeEnvSnapshot {
     userProfile: process.env.USERPROFILE,
     homeDrive: process.env.HOMEDRIVE,
     homePath: process.env.HOMEPATH,
-    stateDir: process.env.OPENCLAW_STATE_DIR,
+    stateDir: process.env.FORGE_ORCH_STATE_DIR,
   };
 }
 
@@ -34,7 +34,7 @@ function restoreHomeEnv(snapshot: HomeEnvSnapshot) {
   restoreKey("USERPROFILE", snapshot.userProfile);
   restoreKey("HOMEDRIVE", snapshot.homeDrive);
   restoreKey("HOMEPATH", snapshot.homePath);
-  restoreKey("OPENCLAW_STATE_DIR", snapshot.stateDir);
+  restoreKey("FORGE_ORCH_STATE_DIR", snapshot.stateDir);
 }
 
 describe("config io write", () => {
@@ -42,7 +42,7 @@ describe("config io write", () => {
   let fixtureCount = 0;
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-config-io-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "forge-orchestrator-config-io-"));
   });
 
   afterAll(async () => {
@@ -51,12 +51,12 @@ describe("config io write", () => {
 
   const withTempHome = async <T>(fn: (home: string) => Promise<T>): Promise<T> => {
     const home = path.join(fixtureRoot, `home-${fixtureCount++}`);
-    await fs.mkdir(path.join(home, ".openclaw"), { recursive: true });
+    await fs.mkdir(path.join(home, ".forge-orchestrator"), { recursive: true });
 
     const snapshot = snapshotHomeEnv();
     process.env.HOME = home;
     process.env.USERPROFILE = home;
-    process.env.OPENCLAW_STATE_DIR = path.join(home, ".openclaw");
+    process.env.FORGE_ORCH_STATE_DIR = path.join(home, ".forge-orchestrator");
 
     if (process.platform === "win32") {
       const match = home.match(/^([A-Za-z]:)(.*)$/);
@@ -75,7 +75,7 @@ describe("config io write", () => {
 
   it("persists caller changes onto resolved config without leaking runtime defaults", async () => {
     await withTempHome(async (home) => {
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
+      const configPath = path.join(home, ".forge-orchestrator", "forge-orchestrator.json");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(
         configPath,
@@ -115,7 +115,7 @@ describe("config io write", () => {
 
   it("preserves env var references when writing", async () => {
     await withTempHome(async (home) => {
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
+      const configPath = path.join(home, ".forge-orchestrator", "forge-orchestrator.json");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(
         configPath,
@@ -173,7 +173,7 @@ describe("config io write", () => {
 
   it("keeps env refs in arrays when appending entries", async () => {
     await withTempHome(async (home) => {
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
+      const configPath = path.join(home, ".forge-orchestrator", "forge-orchestrator.json");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(
         configPath,
@@ -245,7 +245,7 @@ describe("config io write", () => {
 
   it("logs an overwrite audit entry when replacing an existing config file", async () => {
     await withTempHome(async (home) => {
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
+      const configPath = path.join(home, ".forge-orchestrator", "forge-orchestrator.json");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(
         configPath,

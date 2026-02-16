@@ -554,6 +554,22 @@ class NodeRuntime(context: Context) {
     nodeSession.disconnect()
   }
 
+  fun onSmsReceived(from: String, body: String) {
+    if (!nodeConnected) return
+    scope.launch {
+      nodeSession.sendNodeEvent(
+        event = "agent.request",
+        payloadJson =
+          buildJsonObject {
+            put("message", JsonPrimitive("SMS from $from:\n$body"))
+            put("sessionKey", JsonPrimitive("sms:$from"))
+            put("thinking", JsonPrimitive("low"))
+            put("deliver", JsonPrimitive(false))
+          }.toString(),
+      )
+    }
+  }
+
   fun handleCanvasA2UIActionFromWebView(payloadJson: String) {
     scope.launch {
       val trimmed = payloadJson.trim()

@@ -298,7 +298,8 @@ export function attachGatewayWsMessageHandler(params: {
           return;
         }
         // Default-deny: scopes must be explicit. Empty/missing scopes means no permissions.
-        const scopes = Array.isArray(connectParams.scopes) ? connectParams.scopes : [];
+        // May be promoted later from paired-device allowlist when the client omits scopes.
+        let scopes = Array.isArray(connectParams.scopes) ? connectParams.scopes : [];
         connectParams.role = role;
         connectParams.scopes = scopes;
 
@@ -766,6 +767,18 @@ export function attachGatewayWsMessageHandler(params: {
           }
         }
 
+        // When the client connects with empty scopes, inherit from paired device allowlist.
+        // This lets paired devices (e.g. Android app) receive their approved scopes without
+        // needing to explicitly request them in the connect handshake.
+        if (device && scopes.length === 0) {
+          const effectivePaired = await getPairedDevice(device.id);
+          const pairedScopes = Array.isArray(effectivePaired?.scopes) ? effectivePaired.scopes : [];
+          if (pairedScopes.length > 0) {
+            scopes = pairedScopes;
+            connectParams.scopes = scopes;
+          }
+        }
+
         const deviceToken = device
           ? await ensureDeviceToken({ deviceId: device.id, role, scopes })
           : null;
@@ -833,7 +846,7 @@ export function attachGatewayWsMessageHandler(params: {
           type: "hello-ok",
           protocol: PROTOCOL_VERSION,
           server: {
-            version: process.env.OPENCLAW_VERSION ?? process.env.npm_package_version ?? "dev",
+            version: process.env.FORGE_ORCH_VERSION ?? process.env.npm_package_version ?? "dev",
             commit: process.env.GIT_COMMIT,
             host: os.hostname(),
             connId,

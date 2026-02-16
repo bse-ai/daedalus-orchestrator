@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node scripts/run-node.mjs gateway:*)",
+      "Bash(timeout:*)",
+      "Bash(Get-Process node)",
+      "Bash(Measure-Object)",
+      "Bash(Select-Object -ExpandProperty Count)",
+      "Bash(powershell:*)",
+      "Bash(taskkill:*)"
+    ]
+  }
+}

@@ -34,7 +34,7 @@ async function createLargeTestJpeg(): Promise<{ buffer: Buffer; file: string }> 
 }
 
 beforeAll(async () => {
-  fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-media-test-"));
+  fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "forge-orchestrator-media-test-"));
   largeJpegBuffer = await sharp({
     create: {
       width: 1200,

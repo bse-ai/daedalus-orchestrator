@@ -1,0 +1,12 @@
+[90m2026-02-12T12:39:38.240Z[39m [35m[canvas][39m [36mhost mounted at http://127.0.0.1:18789/__openclaw__/canvas/ (root C:\Users\brend\.openclaw\canvas)[39m
+[90m2026-02-12T12:39:38.351Z[39m [36m[heartbeat][39m [36mstarted[39m
+[90m2026-02-12T12:39:38.356Z[39m [36m[gateway][39m [36magent model: litellm/claude-opus-4-6[39m
+[90m2026-02-12T12:39:38.357Z[39m [36m[gateway][39m [36mlistening on ws://127.0.0.1:18789 (PID 40472)[39m
+[90m2026-02-12T12:39:38.358Z[39m [36m[gateway][39m [36mlistening on ws://[::1]:18789[39m
+[90m2026-02-12T12:39:38.359Z[39m [36m[gateway][39m [36mlog file: \tmp\openclaw\openclaw-2026-02-12.log[39m
+[90m2026-02-12T12:39:38.364Z[39m [35m[browser/service][39m [36mBrowser control service ready (profiles=2)[39m
+[90m2026-02-12T12:39:38.401Z[39m [35m[whatsapp][39m [36m[default] starting provider (+14012846539)[39m
+2026-02-12T12:39:38.424Z [voice-call] Webhook server listening on http://127.0.0.1:3334/voice/webhook
+[90m2026-02-12T12:39:38.428Z[39m [35m[plugins][39m [36m[voice-call] Runtime initialized[39m
+[90m2026-02-12T12:39:38.429Z[39m [35m[plugins][39m [36m[voice-call] Webhook URL: http://127.0.0.1:3334/voice/webhook[39m
+[90m2026-02-12T12:39:39.155Z[39m [35m[whatsapp][39m [36mListening for personal WhatsApp inbound messages.[39m

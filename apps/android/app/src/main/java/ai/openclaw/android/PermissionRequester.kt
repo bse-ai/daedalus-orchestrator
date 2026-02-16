@@ -127,7 +127,8 @@ class PermissionRequester(private val activity: ComponentActivity) {
     when (permission) {
       Manifest.permission.CAMERA -> "Camera"
       Manifest.permission.RECORD_AUDIO -> "Microphone"
-      Manifest.permission.SEND_SMS -> "SMS"
+      Manifest.permission.SEND_SMS -> "Send SMS"
+      Manifest.permission.RECEIVE_SMS -> "Receive SMS"
       else -> permission
     }
 }

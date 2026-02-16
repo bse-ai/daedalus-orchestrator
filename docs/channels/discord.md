@@ -57,7 +57,7 @@ DISCORD_BOT_TOKEN=...
     Invite the bot to your server with message permissions.
 
 ```bash
-openclaw gateway
+forge-orchestrator gateway
 ```
 
   </Step>
@@ -65,8 +65,8 @@ openclaw gateway
   <Step title="Approve first DM pairing">
 
 ```bash
-openclaw pairing list discord
-openclaw pairing approve discord <CODE>
+forge-orchestrator pairing list discord
+forge-orchestrator pairing approve discord <CODE>
 ```
 
     Pairing codes expire after 1 hour.
@@ -243,7 +243,7 @@ Use `bindings[].match.roles` to route Discord guild members to different agents 
     - channel ID
     - user ID
 
-    Prefer numeric IDs in OpenClaw config for reliable audits and probes.
+    Prefer numeric IDs in ForgeOrchestrator config for reliable audits and probes.
 
   </Accordion>
 </AccordionGroup>
@@ -254,7 +254,7 @@ Use `bindings[].match.roles` to route Discord guild members to different agents 
 - Per-channel override: `channels.discord.commands.native`.
 - `commands.native=false` explicitly clears previously registered Discord native commands.
 - Native command auth uses the same Discord allowlists/policies as normal message handling.
-- Commands may still be visible in Discord UI for users who are not authorized; execution still enforces OpenClaw auth and returns "not authorized".
+- Commands may still be visible in Discord UI for users who are not authorized; execution still enforces ForgeOrchestrator auth and returns "not authorized".
 
 See [Slash commands](/tools/slash-commands) for command catalog and behavior.
 
@@ -422,7 +422,7 @@ See [Slash commands](/tools/slash-commands) for command catalog and behavior.
     discord: {
       activity: "Live coding",
       activityType: 1,
-      activityUrl: "https://twitch.tv/openclaw",
+      activityUrl: "https://twitch.tv/forge-orchestrator",
     },
   },
 }
@@ -479,13 +479,13 @@ Default gate behavior:
 
 ## Voice messages
 
-Discord voice messages show a waveform preview and require OGG/Opus audio plus metadata. OpenClaw generates the waveform automatically, but it needs `ffmpeg` and `ffprobe` available on the gateway host to inspect and convert audio files.
+Discord voice messages show a waveform preview and require OGG/Opus audio plus metadata. ForgeOrchestrator generates the waveform automatically, but it needs `ffmpeg` and `ffprobe` available on the gateway host to inspect and convert audio files.
 
 Requirements and constraints:
 
 - Provide a **local file path** (URLs are rejected).
 - Omit text content (Discord does not allow text + voice message in the same payload).
-- Any audio format is accepted; OpenClaw converts to OGG/Opus when needed.
+- Any audio format is accepted; ForgeOrchestrator converts to OGG/Opus when needed.
 
 Example:
 
@@ -514,9 +514,9 @@ message(action="send", channel="discord", target="channel:123", path="/path/to/a
     Useful checks:
 
 ```bash
-openclaw doctor
-openclaw channels status --probe
-openclaw logs --follow
+forge-orchestrator doctor
+forge-orchestrator channels status --probe
+forge-orchestrator logs --follow
 ```
 
   </Accordion>
@@ -575,7 +575,7 @@ High-signal Discord fields:
 
 - Treat bot tokens as secrets (`DISCORD_BOT_TOKEN` preferred in supervised environments).
 - Grant least-privilege Discord permissions.
-- If command deploy/state is stale, restart gateway and re-check with `openclaw channels status --probe`.
+- If command deploy/state is stale, restart gateway and re-check with `forge-orchestrator channels status --probe`.
 
 ## Related
 

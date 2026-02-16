@@ -41,7 +41,7 @@ describe("memory index", () => {
   let manager: MemoryIndexManager | null = null;
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-mem-fixtures-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "forge-orchestrator-mem-fixtures-"));
   });
 
   afterAll(async () => {

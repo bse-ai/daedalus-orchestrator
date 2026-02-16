@@ -33,7 +33,7 @@ describe("memory indexing with OpenAI batches", () => {
   let setTimeoutSpy: ReturnType<typeof vi.spyOn>;
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-mem-batch-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "forge-orchestrator-mem-batch-"));
   });
 
   afterAll(async () => {

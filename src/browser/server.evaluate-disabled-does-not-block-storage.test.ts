@@ -41,9 +41,9 @@ vi.mock("../config/config.js", async (importOriginal) => {
       browser: {
         enabled: true,
         evaluateEnabled: false,
-        defaultProfile: "openclaw",
+        defaultProfile: "forge-orchestrator",
         profiles: {
-          openclaw: { cdpPort: testPort + 1, color: "#FF4500" },
+          "forge-orchestrator": { cdpPort: testPort + 1, color: "#FF4500" },
         },
       },
     }),
@@ -80,8 +80,8 @@ async function getFreePort(): Promise<number> {
 describe("browser control evaluate gating", () => {
   beforeEach(async () => {
     testPort = await getFreePort();
-    prevGatewayPort = process.env.OPENCLAW_GATEWAY_PORT;
-    process.env.OPENCLAW_GATEWAY_PORT = String(testPort - 2);
+    prevGatewayPort = process.env.FORGE_ORCH_GATEWAY_PORT;
+    process.env.FORGE_ORCH_GATEWAY_PORT = String(testPort - 2);
 
     pwMocks.cookiesGetViaPlaywright.mockClear();
     pwMocks.storageGetViaPlaywright.mockClear();
@@ -93,9 +93,9 @@ describe("browser control evaluate gating", () => {
   afterEach(async () => {
     vi.restoreAllMocks();
     if (prevGatewayPort === undefined) {
-      delete process.env.OPENCLAW_GATEWAY_PORT;
+      delete process.env.FORGE_ORCH_GATEWAY_PORT;
     } else {
-      process.env.OPENCLAW_GATEWAY_PORT = prevGatewayPort;
+      process.env.FORGE_ORCH_GATEWAY_PORT = prevGatewayPort;
     }
 
     await stopBrowserControlServer();

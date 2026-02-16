@@ -1,12 +1,12 @@
 {
-  "name": "@openclaw/bluebubbles",
+  "name": "@forge-orchestrator/bluebubbles",
   "version": "2026.2.13",
-  "description": "OpenClaw BlueBubbles channel plugin",
+  "description": "ForgeOrchestrator BlueBubbles channel plugin",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "forge-orchestrator": "workspace:*"
   },
-  "openclaw": {
+  "forge-orchestrator": {
     "extensions": [
       "./index.ts"
     ],
@@ -28,7 +28,7 @@
       "order": 75
     },
     "install": {
-      "npmSpec": "@openclaw/bluebubbles",
+      "npmSpec": "@forge-orchestrator/bluebubbles",
       "localPath": "extensions/bluebubbles",
       "defaultChoice": "npm"
     }

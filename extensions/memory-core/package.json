@@ -1,16 +1,16 @@
 {
-  "name": "@openclaw/memory-core",
+  "name": "@forge-orchestrator/memory-core",
   "version": "2026.2.13",
   "private": true,
-  "description": "OpenClaw core memory search plugin",
+  "description": "ForgeOrchestrator core memory search plugin",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "forge-orchestrator": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.1.26"
+    "forge-orchestrator": ">=2026.1.26"
   },
-  "openclaw": {
+  "forge-orchestrator": {
     "extensions": [
       "./index.ts"
     ]

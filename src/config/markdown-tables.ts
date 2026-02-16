@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "./config.js";
+import type { ForgeOrchestratorConfig } from "./config.js";
 import type { MarkdownTableMode } from "./types.base.js";
 import { normalizeChannelId } from "../channels/plugins/index.js";
 import { normalizeAccountId } from "../routing/session-key.js";
@@ -50,7 +50,7 @@ function resolveMarkdownModeFromSection(
 }
 
 export function resolveMarkdownTableMode(params: {
-  cfg?: Partial<OpenClawConfig>;
+  cfg?: Partial<ForgeOrchestratorConfig>;
   channel?: string | null;
   accountId?: string | null;
 }): MarkdownTableMode {

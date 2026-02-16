@@ -7,7 +7,7 @@ import { resolvePluginTools } from "./tools.js";
 
 type TempPlugin = { dir: string; file: string; id: string };
 
-const fixtureRoot = path.join(os.tmpdir(), `openclaw-plugin-tools-${randomUUID()}`);
+const fixtureRoot = path.join(os.tmpdir(), `forge-orchestrator-plugin-tools-${randomUUID()}`);
 const EMPTY_PLUGIN_SCHEMA = { type: "object", additionalProperties: false, properties: {} };
 
 function makeFixtureDir(id: string) {
@@ -21,7 +21,7 @@ function writePlugin(params: { id: string; body: string }): TempPlugin {
   const file = path.join(dir, `${params.id}.js`);
   fs.writeFileSync(file, params.body, "utf-8");
   fs.writeFileSync(
-    path.join(dir, "openclaw.plugin.json"),
+    path.join(dir, "forge-orchestrator.plugin.json"),
     JSON.stringify(
       {
         id: params.id,
@@ -88,6 +88,7 @@ afterAll(() => {
 describe("resolvePluginTools optional tools", () => {
   it("skips optional tools without explicit allowlist", () => {
     const tools = resolvePluginTools({
+      _skipSourcePathChecks: true,
       context: {
         config: {
           plugins: {
@@ -103,6 +104,7 @@ describe("resolvePluginTools optional tools", () => {
 
   it("allows optional tools by name", () => {
     const tools = resolvePluginTools({
+      _skipSourcePathChecks: true,
       context: {
         config: {
           plugins: {
@@ -119,6 +121,7 @@ describe("resolvePluginTools optional tools", () => {
 
   it("allows optional tools via plugin groups", () => {
     const toolsAll = resolvePluginTools({
+      _skipSourcePathChecks: true,
       context: {
         config: {
           plugins: {
@@ -133,6 +136,7 @@ describe("resolvePluginTools optional tools", () => {
     expect(toolsAll.map((tool) => tool.name)).toContain("optional_tool");
 
     const toolsPlugin = resolvePluginTools({
+      _skipSourcePathChecks: true,
       context: {
         config: {
           plugins: {
@@ -149,6 +153,7 @@ describe("resolvePluginTools optional tools", () => {
 
   it("rejects plugin id collisions with core tool names", () => {
     const tools = resolvePluginTools({
+      _skipSourcePathChecks: true,
       context: {
         config: {
           plugins: {
@@ -166,6 +171,7 @@ describe("resolvePluginTools optional tools", () => {
 
   it("skips conflicting tool names but keeps other tools", () => {
     const tools = resolvePluginTools({
+      _skipSourcePathChecks: true,
       context: {
         config: {
           plugins: {

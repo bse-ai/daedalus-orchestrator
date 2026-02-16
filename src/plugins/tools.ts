@@ -1,9 +1,9 @@
 import type { AnyAgentTool } from "../agents/tools/common.js";
-import type { OpenClawPluginToolContext } from "./types.js";
+import type { ForgeOrchestratorPluginToolContext } from "./types.js";
 import { normalizeToolName } from "../agents/tool-policy.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { applyTestPluginDefaults, normalizePluginsConfig } from "./config-state.js";
-import { loadOpenClawPlugins } from "./loader.js";
+import { loadForgeOrchestratorPlugins } from "./loader.js";
 
 const log = createSubsystemLogger("plugins");
 
@@ -42,9 +42,11 @@ function isOptionalToolAllowed(params: {
 }
 
 export function resolvePluginTools(params: {
-  context: OpenClawPluginToolContext;
+  context: ForgeOrchestratorPluginToolContext;
   existingToolNames?: Set<string>;
   toolAllowlist?: string[];
+  /** @internal Skip temp/sandbox source-path security checks (test-only). */
+  _skipSourcePathChecks?: boolean;
 }): AnyAgentTool[] {
   // Fast path: when plugins are effectively disabled, avoid discovery/jiti entirely.
   // This matters a lot for unit tests and for tool construction hot paths.
@@ -54,9 +56,10 @@ export function resolvePluginTools(params: {
     return [];
   }
 
-  const registry = loadOpenClawPlugins({
+  const registry = loadForgeOrchestratorPlugins({
     config: effectiveConfig,
     workspaceDir: params.context.workspaceDir,
+    _skipSourcePathChecks: params._skipSourcePathChecks,
     logger: {
       info: (msg) => log.info(msg),
       warn: (msg) => log.warn(msg),

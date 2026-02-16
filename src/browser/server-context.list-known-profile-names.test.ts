@@ -6,14 +6,14 @@ import { listKnownProfileNames } from "./server-context.js";
 describe("browser server-context listKnownProfileNames", () => {
   it("includes configured and runtime-only profile names", () => {
     const resolved = resolveBrowserConfig({
-      defaultProfile: "openclaw",
+      defaultProfile: "forge-orchestrator",
       profiles: {
-        openclaw: { cdpPort: 18800, color: "#FF4500" },
+        "forge-orchestrator": { cdpPort: 18800, color: "#FF4500" },
       },
     });
-    const openclaw = resolveProfile(resolved, "openclaw");
-    if (!openclaw) {
-      throw new Error("expected openclaw profile");
+    const forgeOrch = resolveProfile(resolved, "forge-orchestrator");
+    if (!forgeOrch) {
+      throw new Error("expected forge-orchestrator profile");
     }
 
     const state: BrowserServerState = {
@@ -24,7 +24,7 @@ describe("browser server-context listKnownProfileNames", () => {
         [
           "stale-removed",
           {
-            profile: { ...openclaw, name: "stale-removed" },
+            profile: { ...forgeOrch, name: "stale-removed" },
             running: null,
           },
         ],
@@ -33,7 +33,7 @@ describe("browser server-context listKnownProfileNames", () => {
 
     expect(listKnownProfileNames(state).toSorted()).toEqual([
       "chrome",
-      "openclaw",
+      "forge-orchestrator",
       "stale-removed",
     ]);
   });

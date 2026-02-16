@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
-import type { OpenClawConfig } from "../../config/config.js";
+import type { ForgeOrchestratorConfig } from "../../config/config.js";
 import { createMemoryServiceQueryTool } from "./memory-service-query-tool.js";
 
 const mocks = vi.hoisted(() => ({
@@ -30,7 +30,7 @@ describe("memory_service_query tool", () => {
   it("returns null when memorySearch config is missing", () => {
     const config = {
       agents: {},
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createMemoryServiceQueryTool({ config });
     expect(tool).toBeNull();
@@ -47,7 +47,7 @@ describe("memory_service_query tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createMemoryServiceQueryTool({ config });
     expect(tool).toBeNull();
@@ -65,7 +65,7 @@ describe("memory_service_query tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createMemoryServiceQueryTool({ config });
     expect(tool).not.toBeNull();
@@ -91,7 +91,7 @@ describe("memory_service_query tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createMemoryServiceQueryTool({ config });
     expect(tool).not.toBeNull();
@@ -129,7 +129,7 @@ describe("memory_service_query tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createMemoryServiceQueryTool({ config });
     expect(tool).not.toBeNull();
@@ -164,7 +164,7 @@ describe("memory_service_query tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createMemoryServiceQueryTool({ config });
     expect(tool).not.toBeNull();
@@ -199,7 +199,7 @@ describe("memory_service_query tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createMemoryServiceQueryTool({ config });
     expect(tool).not.toBeNull();
@@ -237,7 +237,7 @@ describe("memory_service_query tool", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createMemoryServiceQueryTool({
       config,

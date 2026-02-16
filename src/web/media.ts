@@ -35,8 +35,8 @@ function getDefaultLocalRoots(): string[] {
   const home = os.homedir();
   return [
     os.tmpdir(),
-    path.join(home, ".openclaw", "media"),
-    path.join(home, ".openclaw", "agents"),
+    path.join(home, ".forge-orchestrator", "media"),
+    path.join(home, ".forge-orchestrator", "agents"),
   ];
 }
 

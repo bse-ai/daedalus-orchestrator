@@ -1,25 +1,33 @@
 services:
   forge-gateway:
-    image: ${OPENCLAW_IMAGE:-forge-orchestrator:local}
+    image: ${FORGE_ORCH_IMAGE:-forge-orchestrator:local}
     container_name: forge-gateway
     environment:
       HOME: /home/node
       TERM: xterm-256color
       NODE_ENV: production
-      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN}
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      FORGE_ORCH_GATEWAY_TOKEN: ${FORGE_ORCH_GATEWAY_TOKEN}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      N8N_API_KEY: ${N8N_API_KEY:-}
+      N8N_API_URL: ${N8N_API_URL:-https://arcbse.app.n8n.cloud}
       GRAPHITI_ENABLED: ${GRAPHITI_ENABLED:-}
       GRAPHITI_ENDPOINT: ${GRAPHITI_ENDPOINT:-}
       SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN:-}
       CLAUDE_AI_SESSION_KEY: ${CLAUDE_AI_SESSION_KEY:-}
       CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY:-}
       CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE:-}
+      GOG_KEYRING_PASSWORD: ${GOG_KEYRING_PASSWORD:-forge-gmail-2026}
     volumes:
-      - ${OPENCLAW_CONFIG_DIR:-./docker}:/home/node/.openclaw
-      - ${OPENCLAW_WORKSPACE_DIR:-./workspace}:/home/node/.openclaw/workspace
+      - ${FORGE_ORCH_CONFIG_DIR:-./docker}:/home/node/.forge-orchestrator
+      - ${FORGE_ORCH_WORKSPACE_DIR:-./workspace}:/home/node/.forge-orchestrator/workspace
+      - ${FORGE_ORCH_CREDENTIALS_DIR:-C:/Users/brend/.forge-orchestrator/credentials}:/home/node/.forge-orchestrator/credentials
+      - ${FORGE_ORCH_DEVICES_DIR:-C:/Users/brend/.forge-orchestrator/devices}:/home/node/.forge-orchestrator/devices
+      - ${FORGE_ORCH_IDENTITY_DIR:-C:/Users/brend/.forge-orchestrator/identity}:/home/node/.forge-orchestrator/identity
+      - ${FORGE_ORCH_GOGCLI_DIR:-C:/Users/brend/AppData/Roaming/gogcli}:/home/node/.config/gogcli
     ports:
-      - "${OPENCLAW_GATEWAY_PORT:-18789}:18789"
-      - "${OPENCLAW_BRIDGE_PORT:-18790}:18790"
+      - "${FORGE_ORCH_GATEWAY_PORT:-18789}:18789"
+      - "${FORGE_ORCH_BRIDGE_PORT:-18790}:18790"
+      - "${FORGE_ORCH_GMAIL_PUBSUB_PORT:-8788}:8788"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     init: true
@@ -27,30 +35,29 @@ services:
     command:
       [
         "node",
-        "openclaw.mjs",
+        "forge-orchestrator.mjs",
         "gateway",
         "--bind",
-        "${OPENCLAW_GATEWAY_BIND:-lan}",
+        "${FORGE_ORCH_GATEWAY_BIND:-lan}",
         "--port",
         "18789",
       ]
 
   forge-cli:
-    image: ${OPENCLAW_IMAGE:-forge-orchestrator:local}
+    image: ${FORGE_ORCH_IMAGE:-forge-orchestrator:local}
     container_name: forge-cli
     environment:
       HOME: /home/node
       TERM: xterm-256color
       NODE_ENV: production
-      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN}
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      FORGE_ORCH_GATEWAY_TOKEN: ${FORGE_ORCH_GATEWAY_TOKEN}
       BROWSER: echo
       CLAUDE_AI_SESSION_KEY: ${CLAUDE_AI_SESSION_KEY:-}
       CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY:-}
       CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE:-}
     volumes:
-      - ${OPENCLAW_CONFIG_DIR:-./docker}:/home/node/.openclaw
-      - ${OPENCLAW_WORKSPACE_DIR:-./workspace}:/home/node/.openclaw/workspace
+      - ${FORGE_ORCH_CONFIG_DIR:-./docker}:/home/node/.forge-orchestrator
+      - ${FORGE_ORCH_WORKSPACE_DIR:-./workspace}:/home/node/.forge-orchestrator/workspace
     extra_hosts:
       - "host.docker.internal:host-gateway"
     stdin_open: true
@@ -58,4 +65,4 @@ services:
     init: true
     profiles:
       - cli
-    entrypoint: ["node", "openclaw.mjs"]
+    entrypoint: ["node", "forge-orchestrator.mjs"]

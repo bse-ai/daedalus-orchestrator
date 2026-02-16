@@ -1,6 +1,6 @@
 import { Type } from "@sinclair/typebox";
 
-import type { OpenClawConfig } from "../../config/config.js";
+import type { ForgeOrchestratorConfig } from "../../config/config.js";
 import {
   createLightRAGClient,
   DEFAULT_LIGHTRAG_ENDPOINT,
@@ -19,7 +19,7 @@ const LightRAGQuerySchema = Type.Object({
 });
 
 export function createLightRAGQueryTool(options: {
-  config?: OpenClawConfig;
+  config?: ForgeOrchestratorConfig;
   agentSessionKey?: string;
 }): AnyAgentTool | null {
   const cfg = options.config;

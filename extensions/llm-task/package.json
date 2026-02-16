@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/llm-task",
+  "name": "@forge-orchestrator/llm-task",
   "version": "2026.2.13",
   "private": true,
-  "description": "OpenClaw JSON-only LLM task plugin",
+  "description": "ForgeOrchestrator JSON-only LLM task plugin",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "forge-orchestrator": "workspace:*"
   },
-  "openclaw": {
+  "forge-orchestrator": {
     "extensions": [
       "./index.ts"
     ]

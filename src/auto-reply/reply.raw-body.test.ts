@@ -24,8 +24,8 @@ type HomeEnvSnapshot = {
   USERPROFILE: string | undefined;
   HOMEDRIVE: string | undefined;
   HOMEPATH: string | undefined;
-  OPENCLAW_STATE_DIR: string | undefined;
-  OPENCLAW_AGENT_DIR: string | undefined;
+  FORGE_ORCH_STATE_DIR: string | undefined;
+  FORGE_ORCH_AGENT_DIR: string | undefined;
   PI_CODING_AGENT_DIR: string | undefined;
 };
 
@@ -35,8 +35,8 @@ function snapshotHomeEnv(): HomeEnvSnapshot {
     USERPROFILE: process.env.USERPROFILE,
     HOMEDRIVE: process.env.HOMEDRIVE,
     HOMEPATH: process.env.HOMEPATH,
-    OPENCLAW_STATE_DIR: process.env.OPENCLAW_STATE_DIR,
-    OPENCLAW_AGENT_DIR: process.env.OPENCLAW_AGENT_DIR,
+    FORGE_ORCH_STATE_DIR: process.env.FORGE_ORCH_STATE_DIR,
+    FORGE_ORCH_AGENT_DIR: process.env.FORGE_ORCH_AGENT_DIR,
     PI_CODING_AGENT_DIR: process.env.PI_CODING_AGENT_DIR,
   };
 }
@@ -56,13 +56,13 @@ let caseId = 0;
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
   const home = path.join(fixtureRoot, `case-${++caseId}`);
-  await fs.mkdir(path.join(home, ".openclaw", "agents", "main", "sessions"), { recursive: true });
+  await fs.mkdir(path.join(home, ".forge-orchestrator", "agents", "main", "sessions"), { recursive: true });
   const envSnapshot = snapshotHomeEnv();
   process.env.HOME = home;
   process.env.USERPROFILE = home;
-  process.env.OPENCLAW_STATE_DIR = path.join(home, ".openclaw");
-  process.env.OPENCLAW_AGENT_DIR = path.join(home, ".openclaw", "agent");
-  process.env.PI_CODING_AGENT_DIR = path.join(home, ".openclaw", "agent");
+  process.env.FORGE_ORCH_STATE_DIR = path.join(home, ".forge-orchestrator");
+  process.env.FORGE_ORCH_AGENT_DIR = path.join(home, ".forge-orchestrator", "agent");
+  process.env.PI_CODING_AGENT_DIR = path.join(home, ".forge-orchestrator", "agent");
 
   if (process.platform === "win32") {
     const match = home.match(/^([A-Za-z]:)(.*)$/);
@@ -84,7 +84,7 @@ describe("RawBody directive parsing", () => {
   type ReplyConfig = Parameters<typeof getReplyFromConfig>[2];
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-rawbody-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "forge-orchestrator-rawbody-"));
   });
 
   afterAll(async () => {
@@ -131,7 +131,7 @@ describe("RawBody directive parsing", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw-1"),
+              workspace: path.join(home, "forge-orchestrator-1"),
             },
           },
           channels: { whatsapp: { allowFrom: ["*"] } },
@@ -169,7 +169,7 @@ describe("RawBody directive parsing", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "forge-orchestrator"),
             },
           },
           channels: { whatsapp: { allowFrom: ["*"] } },
@@ -189,7 +189,7 @@ describe("RawBody directive parsing", () => {
       const agentId = "worker1";
       const sessionId = "sess-worker-1";
       const sessionKey = `agent:${agentId}:telegram:12345`;
-      const sessionsDir = path.join(home, ".openclaw", "agents", agentId, "sessions");
+      const sessionsDir = path.join(home, ".forge-orchestrator", "agents", agentId, "sessions");
       const sessionFile = path.join(sessionsDir, `${sessionId}.jsonl`);
       const storePath = path.join(sessionsDir, "sessions.json");
       await fs.mkdir(sessionsDir, { recursive: true });
@@ -226,7 +226,7 @@ describe("RawBody directive parsing", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "forge-orchestrator"),
             },
           },
         },

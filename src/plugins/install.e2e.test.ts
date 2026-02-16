@@ -14,7 +14,7 @@ vi.mock("../process/exec.js", () => ({
 const tempDirs: string[] = [];
 
 function makeTempDir() {
-  const dir = path.join(os.tmpdir(), `openclaw-plugin-install-${randomUUID()}`);
+  const dir = path.join(os.tmpdir(), `forge-orchestrator-plugin-install-${randomUUID()}`);
   fs.mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;
@@ -53,7 +53,7 @@ afterEach(() => {
 });
 
 describe("installPluginFromArchive", () => {
-  it("installs into ~/.openclaw/extensions and uses unscoped id", async () => {
+  it("installs into ~/.forge-orchestrator/extensions and uses unscoped id", async () => {
     const stateDir = makeTempDir();
     const workDir = makeTempDir();
     const pkgDir = path.join(workDir, "package");
@@ -61,9 +61,9 @@ describe("installPluginFromArchive", () => {
     fs.writeFileSync(
       path.join(pkgDir, "package.json"),
       JSON.stringify({
-        name: "@openclaw/voice-call",
+        name: "@forge-orchestrator/voice-call",
         version: "0.0.1",
-        openclaw: { extensions: ["./dist/index.js"] },
+        "forge-orchestrator": { extensions: ["./dist/index.js"] },
       }),
       "utf-8",
     );
@@ -99,9 +99,9 @@ describe("installPluginFromArchive", () => {
     fs.writeFileSync(
       path.join(pkgDir, "package.json"),
       JSON.stringify({
-        name: "@openclaw/voice-call",
+        name: "@forge-orchestrator/voice-call",
         version: "0.0.1",
-        openclaw: { extensions: ["./dist/index.js"] },
+        "forge-orchestrator": { extensions: ["./dist/index.js"] },
       }),
       "utf-8",
     );
@@ -141,9 +141,9 @@ describe("installPluginFromArchive", () => {
     zip.file(
       "package/package.json",
       JSON.stringify({
-        name: "@openclaw/zipper",
+        name: "@forge-orchestrator/zipper",
         version: "0.0.1",
-        openclaw: { extensions: ["./dist/index.js"] },
+        "forge-orchestrator": { extensions: ["./dist/index.js"] },
       }),
     );
     zip.file("package/dist/index.js", "export {};");
@@ -175,9 +175,9 @@ describe("installPluginFromArchive", () => {
     fs.writeFileSync(
       path.join(pkgDir, "package.json"),
       JSON.stringify({
-        name: "@openclaw/voice-call",
+        name: "@forge-orchestrator/voice-call",
         version: "0.0.1",
-        openclaw: { extensions: ["./dist/index.js"] },
+        "forge-orchestrator": { extensions: ["./dist/index.js"] },
       }),
       "utf-8",
     );
@@ -193,9 +193,9 @@ describe("installPluginFromArchive", () => {
       fs.writeFileSync(
         path.join(pkgDir, "package.json"),
         JSON.stringify({
-          name: "@openclaw/voice-call",
+          name: "@forge-orchestrator/voice-call",
           version: "0.0.2",
-          openclaw: { extensions: ["./dist/index.js"] },
+          "forge-orchestrator": { extensions: ["./dist/index.js"] },
         }),
         "utf-8",
       );
@@ -239,7 +239,7 @@ describe("installPluginFromArchive", () => {
       JSON.stringify({
         name: "@evil/..",
         version: "0.0.1",
-        openclaw: { extensions: ["./dist/index.js"] },
+        "forge-orchestrator": { extensions: ["./dist/index.js"] },
       }),
       "utf-8",
     );
@@ -275,7 +275,7 @@ describe("installPluginFromArchive", () => {
       JSON.stringify({
         name: "@evil/.",
         version: "0.0.1",
-        openclaw: { extensions: ["./dist/index.js"] },
+        "forge-orchestrator": { extensions: ["./dist/index.js"] },
       }),
       "utf-8",
     );
@@ -301,14 +301,14 @@ describe("installPluginFromArchive", () => {
     expect(result.error).toContain("reserved path segment");
   });
 
-  it("rejects packages without openclaw.extensions", async () => {
+  it("rejects packages without forge-orchestrator.extensions", async () => {
     const stateDir = makeTempDir();
     const workDir = makeTempDir();
     const pkgDir = path.join(workDir, "package");
     fs.mkdirSync(pkgDir, { recursive: true });
     fs.writeFileSync(
       path.join(pkgDir, "package.json"),
-      JSON.stringify({ name: "@openclaw/nope", version: "0.0.1" }),
+      JSON.stringify({ name: "@forge-orchestrator/nope", version: "0.0.1" }),
       "utf-8",
     );
 
@@ -328,7 +328,7 @@ describe("installPluginFromArchive", () => {
     if (result.ok) {
       return;
     }
-    expect(result.error).toContain("openclaw.extensions");
+    expect(result.error).toContain("forge-orchestrator.extensions");
   });
 
   it("warns when plugin contains dangerous code patterns", async () => {
@@ -341,7 +341,7 @@ describe("installPluginFromArchive", () => {
       JSON.stringify({
         name: "dangerous-plugin",
         version: "1.0.0",
-        openclaw: { extensions: ["index.js"] },
+        "forge-orchestrator": { extensions: ["index.js"] },
       }),
     );
     fs.writeFileSync(
@@ -378,7 +378,7 @@ describe("installPluginFromArchive", () => {
       JSON.stringify({
         name: "hidden-entry-plugin",
         version: "1.0.0",
-        openclaw: { extensions: [".hidden/index.js"] },
+        "forge-orchestrator": { extensions: [".hidden/index.js"] },
       }),
     );
     fs.writeFileSync(
@@ -419,7 +419,7 @@ describe("installPluginFromArchive", () => {
       JSON.stringify({
         name: "scan-fail-plugin",
         version: "1.0.0",
-        openclaw: { extensions: ["index.js"] },
+        "forge-orchestrator": { extensions: ["index.js"] },
       }),
     );
     fs.writeFileSync(path.join(pluginDir, "index.js"), "export {};");
@@ -453,9 +453,9 @@ describe("installPluginFromDir", () => {
     fs.writeFileSync(
       path.join(pluginDir, "package.json"),
       JSON.stringify({
-        name: "@openclaw/test-plugin",
+        name: "@forge-orchestrator/test-plugin",
         version: "0.0.1",
-        openclaw: { extensions: ["./dist/index.js"] },
+        "forge-orchestrator": { extensions: ["./dist/index.js"] },
         dependencies: { "left-pad": "1.3.0" },
       }),
       "utf-8",

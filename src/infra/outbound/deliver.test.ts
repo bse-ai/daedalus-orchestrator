@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { ForgeOrchestratorConfig } from "../../config/config.js";
 import { signalOutbound } from "../../channels/plugins/outbound/signal.js";
 import { telegramOutbound } from "../../channels/plugins/outbound/telegram.js";
 import { whatsappOutbound } from "../../channels/plugins/outbound/whatsapp.js";
@@ -66,7 +66,7 @@ describe("deliverOutboundPayloads", () => {
   });
   it("chunks telegram markdown and passes through accountId", async () => {
     const sendTelegram = vi.fn().mockResolvedValue({ messageId: "m1", chatId: "c1" });
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       channels: { telegram: { botToken: "tok-1", textChunkLimit: 2 } },
     };
     const prevTelegramToken = process.env.TELEGRAM_BOT_TOKEN;
@@ -99,7 +99,7 @@ describe("deliverOutboundPayloads", () => {
 
   it("passes explicit accountId to sendTelegram", async () => {
     const sendTelegram = vi.fn().mockResolvedValue({ messageId: "m1", chatId: "c1" });
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       channels: { telegram: { botToken: "tok-1", textChunkLimit: 2 } },
     };
 
@@ -121,7 +121,7 @@ describe("deliverOutboundPayloads", () => {
 
   it("uses signal media maxBytes from config", async () => {
     const sendSignal = vi.fn().mockResolvedValue({ messageId: "s1", timestamp: 123 });
-    const cfg: OpenClawConfig = { channels: { signal: { mediaMaxMb: 2 } } };
+    const cfg: ForgeOrchestratorConfig = { channels: { signal: { mediaMaxMb: 2 } } };
 
     const results = await deliverOutboundPayloads({
       cfg,
@@ -146,7 +146,7 @@ describe("deliverOutboundPayloads", () => {
 
   it("chunks Signal markdown using the format-first chunker", async () => {
     const sendSignal = vi.fn().mockResolvedValue({ messageId: "s1", timestamp: 123 });
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       channels: { signal: { textChunkLimit: 20 } },
     };
     const text = `Intro\\n\\n\`\`\`\`md\\n${"y".repeat(60)}\\n\`\`\`\\n\\nOutro`;
@@ -180,7 +180,7 @@ describe("deliverOutboundPayloads", () => {
       .fn()
       .mockResolvedValueOnce({ messageId: "w1", toJid: "jid" })
       .mockResolvedValueOnce({ messageId: "w2", toJid: "jid" });
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       channels: { whatsapp: { textChunkLimit: 2 } },
     };
 
@@ -198,7 +198,7 @@ describe("deliverOutboundPayloads", () => {
 
   it("respects newline chunk mode for WhatsApp", async () => {
     const sendWhatsApp = vi.fn().mockResolvedValue({ messageId: "w1", toJid: "jid" });
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       channels: { whatsapp: { textChunkLimit: 4000, chunkMode: "newline" } },
     };
 
@@ -227,7 +227,7 @@ describe("deliverOutboundPayloads", () => {
 
   it("strips leading blank lines for WhatsApp text payloads", async () => {
     const sendWhatsApp = vi.fn().mockResolvedValue({ messageId: "w1", toJid: "jid" });
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       channels: { whatsapp: { textChunkLimit: 4000 } },
     };
 
@@ -250,7 +250,7 @@ describe("deliverOutboundPayloads", () => {
 
   it("drops whitespace-only WhatsApp text payloads when no media is attached", async () => {
     const sendWhatsApp = vi.fn().mockResolvedValue({ messageId: "w1", toJid: "jid" });
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       channels: { whatsapp: { textChunkLimit: 4000 } },
     };
 
@@ -268,7 +268,7 @@ describe("deliverOutboundPayloads", () => {
 
   it("keeps WhatsApp media payloads but clears whitespace-only captions", async () => {
     const sendWhatsApp = vi.fn().mockResolvedValue({ messageId: "w1", toJid: "jid" });
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       channels: { whatsapp: { textChunkLimit: 4000 } },
     };
 
@@ -324,7 +324,7 @@ describe("deliverOutboundPayloads", () => {
       ]),
     );
 
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       channels: { matrix: { textChunkLimit: 4000, chunkMode: "newline" } },
     };
     const text = "```js\nconst a = 1;\nconst b = 2;\n```\nAfter";
@@ -351,7 +351,7 @@ describe("deliverOutboundPayloads", () => {
         },
       ]),
     );
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       agents: { defaults: { mediaMaxMb: 3 } },
     };
 
@@ -388,7 +388,7 @@ describe("deliverOutboundPayloads", () => {
       .mockRejectedValueOnce(new Error("fail"))
       .mockResolvedValueOnce({ messageId: "w2", toJid: "jid" });
     const onError = vi.fn();
-    const cfg: OpenClawConfig = {};
+    const cfg: ForgeOrchestratorConfig = {};
 
     const results = await deliverOutboundPayloads({
       cfg,
@@ -411,7 +411,7 @@ describe("deliverOutboundPayloads", () => {
       .mockRejectedValueOnce(new Error("fail"))
       .mockResolvedValueOnce({ messageId: "w2", toJid: "jid" });
     const onError = vi.fn();
-    const cfg: OpenClawConfig = {};
+    const cfg: ForgeOrchestratorConfig = {};
 
     await deliverOutboundPayloads({
       cfg,
@@ -438,7 +438,7 @@ describe("deliverOutboundPayloads", () => {
     const sendWhatsApp = vi.fn().mockResolvedValue({ messageId: "w1", toJid: "jid" });
     const abortController = new AbortController();
     abortController.abort();
-    const cfg: OpenClawConfig = {};
+    const cfg: ForgeOrchestratorConfig = {};
 
     await expect(
       deliverOutboundPayloads({
@@ -459,7 +459,7 @@ describe("deliverOutboundPayloads", () => {
   it("passes normalized payload to onError", async () => {
     const sendWhatsApp = vi.fn().mockRejectedValue(new Error("boom"));
     const onError = vi.fn();
-    const cfg: OpenClawConfig = {};
+    const cfg: ForgeOrchestratorConfig = {};
 
     await deliverOutboundPayloads({
       cfg,
@@ -480,7 +480,7 @@ describe("deliverOutboundPayloads", () => {
 
   it("mirrors delivered output when mirror options are provided", async () => {
     const sendTelegram = vi.fn().mockResolvedValue({ messageId: "m1", chatId: "c1" });
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       channels: { telegram: { botToken: "tok-1", textChunkLimit: 2 } },
     };
     mocks.appendAssistantMessageToSessionTranscript.mockClear();

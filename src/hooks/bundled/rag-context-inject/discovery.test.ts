@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import { loadWorkspaceHookEntries } from "../../workspace.js";
 import { loadInternalHooks } from "../../loader.js";
 import { clearInternalHooks, getRegisteredEventKeys } from "../../internal-hooks.js";
-import type { OpenClawConfig } from "../../../config/config.js";
+import type { ForgeOrchestratorConfig } from "../../../config/config.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -38,7 +38,7 @@ describe("rag-context-inject hook discovery", () => {
     // Verify hook was discovered
     expect(ragHook).toBeDefined();
     expect(ragHook?.hook.name).toBe("rag-context-inject");
-    expect(ragHook?.hook.source).toBe("openclaw-bundled");
+    expect(ragHook?.hook.source).toBe("forge-orchestrator-bundled");
   });
 
   it("should have correct metadata for rag-context-inject hook", () => {
@@ -73,7 +73,7 @@ describe("rag-context-inject hook discovery", () => {
   it("should register rag-context-inject hook for agent:bootstrap event", async () => {
     const bundledDir = path.resolve(__dirname, "..");
 
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       hooks: {
         internal: {
           enabled: true,
@@ -82,8 +82,8 @@ describe("rag-context-inject hook discovery", () => {
     };
 
     // Override bundled hooks dir for this test
-    const originalBundledDir = process.env.OPENCLAW_BUNDLED_HOOKS_DIR;
-    process.env.OPENCLAW_BUNDLED_HOOKS_DIR = bundledDir;
+    const originalBundledDir = process.env.FORGE_ORCH_BUNDLED_HOOKS_DIR;
+    process.env.FORGE_ORCH_BUNDLED_HOOKS_DIR = bundledDir;
 
     try {
       // Load hooks (this should discover and register rag-context-inject)
@@ -98,9 +98,9 @@ describe("rag-context-inject hook discovery", () => {
     } finally {
       // Restore original env var
       if (originalBundledDir === undefined) {
-        delete process.env.OPENCLAW_BUNDLED_HOOKS_DIR;
+        delete process.env.FORGE_ORCH_BUNDLED_HOOKS_DIR;
       } else {
-        process.env.OPENCLAW_BUNDLED_HOOKS_DIR = originalBundledDir;
+        process.env.FORGE_ORCH_BUNDLED_HOOKS_DIR = originalBundledDir;
       }
     }
   });
@@ -108,7 +108,7 @@ describe("rag-context-inject hook discovery", () => {
   it("should respect enabled flag in hook config", async () => {
     const bundledDir = path.resolve(__dirname, "..");
 
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       hooks: {
         internal: {
           enabled: true,
@@ -122,8 +122,8 @@ describe("rag-context-inject hook discovery", () => {
     };
 
     // Override bundled hooks dir for this test
-    const originalBundledDir = process.env.OPENCLAW_BUNDLED_HOOKS_DIR;
-    process.env.OPENCLAW_BUNDLED_HOOKS_DIR = bundledDir;
+    const originalBundledDir = process.env.FORGE_ORCH_BUNDLED_HOOKS_DIR;
+    process.env.FORGE_ORCH_BUNDLED_HOOKS_DIR = bundledDir;
 
     try {
       // Load hooks with rag-context-inject disabled
@@ -136,9 +136,9 @@ describe("rag-context-inject hook discovery", () => {
     } finally {
       // Restore original env var
       if (originalBundledDir === undefined) {
-        delete process.env.OPENCLAW_BUNDLED_HOOKS_DIR;
+        delete process.env.FORGE_ORCH_BUNDLED_HOOKS_DIR;
       } else {
-        process.env.OPENCLAW_BUNDLED_HOOKS_DIR = originalBundledDir;
+        process.env.FORGE_ORCH_BUNDLED_HOOKS_DIR = originalBundledDir;
       }
     }
   });

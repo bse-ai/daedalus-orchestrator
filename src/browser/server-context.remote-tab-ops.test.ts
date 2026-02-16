@@ -7,11 +7,11 @@ import { createBrowserRouteContext } from "./server-context.js";
 vi.mock("./chrome.js", () => ({
   isChromeCdpReady: vi.fn(async () => true),
   isChromeReachable: vi.fn(async () => true),
-  launchOpenClawChrome: vi.fn(async () => {
+  launchForgeOrchestratorChrome: vi.fn(async () => {
     throw new Error("unexpected launch");
   }),
-  resolveOpenClawUserDataDir: vi.fn(() => "/tmp/openclaw"),
-  stopOpenClawChrome: vi.fn(async () => {}),
+  resolveForgeOrchestratorUserDataDir: vi.fn(() => "/tmp/forge-orchestrator"),
+  stopForgeOrchestratorChrome: vi.fn(async () => {}),
 }));
 
 const originalFetch = globalThis.fetch;
@@ -22,7 +22,7 @@ afterEach(() => {
 });
 
 function makeState(
-  profile: "remote" | "openclaw",
+  profile: "remote" | "forge-orchestrator",
 ): BrowserServerState & { profiles: Map<string, { lastTargetId?: string | null }> } {
   return {
     // oxlint-disable-next-line typescript/no-explicit-any
@@ -47,7 +47,7 @@ function makeState(
           cdpPort: 443,
           color: "#00AA00",
         },
-        openclaw: { cdpPort: 18800, color: "#FF4500" },
+        "forge-orchestrator": { cdpPort: 18800, color: "#FF4500" },
       },
     },
     profiles: new Map(),
@@ -264,12 +264,12 @@ describe("browser server-context tab selection state", () => {
 
     global.fetch = fetchMock;
 
-    const state = makeState("openclaw");
+    const state = makeState("forge-orchestrator");
     const ctx = createBrowserRouteContext({ getState: () => state });
-    const openclaw = ctx.forProfile("openclaw");
+    const forgeOrch = ctx.forProfile("forge-orchestrator");
 
-    const opened = await openclaw.openTab("https://created.example");
+    const opened = await forgeOrch.openTab("https://created.example");
     expect(opened.targetId).toBe("CREATED");
-    expect(state.profiles.get("openclaw")?.lastTargetId).toBe("CREATED");
+    expect(state.profiles.get("forge-orchestrator")?.lastTargetId).toBe("CREATED");
   });
 });

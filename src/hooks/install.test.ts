@@ -6,7 +6,7 @@ import path from "node:path";
 import * as tar from "tar";
 import { afterAll, describe, expect, it, vi } from "vitest";
 
-const fixtureRoot = path.join(os.tmpdir(), `openclaw-hook-install-${randomUUID()}`);
+const fixtureRoot = path.join(os.tmpdir(), `forge-orchestrator-hook-install-${randomUUID()}`);
 let tempDirIndex = 0;
 
 vi.mock("../process/exec.js", () => ({
@@ -40,9 +40,9 @@ describe("installHooksFromArchive", () => {
     zip.file(
       "package/package.json",
       JSON.stringify({
-        name: "@openclaw/zip-hooks",
+        name: "@forge-orchestrator/zip-hooks",
         version: "0.0.1",
-        openclaw: { hooks: ["./hooks/zip-hook"] },
+        "forge-orchestrator": { hooks: ["./hooks/zip-hook"] },
       }),
     );
     zip.file(
@@ -51,7 +51,7 @@ describe("installHooksFromArchive", () => {
         "---",
         "name: zip-hook",
         "description: Zip hook",
-        'metadata: {"openclaw":{"events":["command:new"]}}',
+        'metadata: {"forge-orchestrator":{"events":["command:new"]}}',
         "---",
         "",
         "# Zip Hook",
@@ -84,9 +84,9 @@ describe("installHooksFromArchive", () => {
     fs.writeFileSync(
       path.join(pkgDir, "package.json"),
       JSON.stringify({
-        name: "@openclaw/tar-hooks",
+        name: "@forge-orchestrator/tar-hooks",
         version: "0.0.1",
-        openclaw: { hooks: ["./hooks/tar-hook"] },
+        "forge-orchestrator": { hooks: ["./hooks/tar-hook"] },
       }),
       "utf-8",
     );
@@ -96,7 +96,7 @@ describe("installHooksFromArchive", () => {
         "---",
         "name: tar-hook",
         "description: Tar hook",
-        'metadata: {"openclaw":{"events":["command:new"]}}',
+        'metadata: {"forge-orchestrator":{"events":["command:new"]}}',
         "---",
         "",
         "# Tar Hook",
@@ -134,7 +134,7 @@ describe("installHooksFromArchive", () => {
       JSON.stringify({
         name: "@evil/..",
         version: "0.0.1",
-        openclaw: { hooks: ["./hooks/evil-hook"] },
+        "forge-orchestrator": { hooks: ["./hooks/evil-hook"] },
       }),
       "utf-8",
     );
@@ -144,7 +144,7 @@ describe("installHooksFromArchive", () => {
         "---",
         "name: evil-hook",
         "description: Evil hook",
-        'metadata: {"openclaw":{"events":["command:new"]}}',
+        'metadata: {"forge-orchestrator":{"events":["command:new"]}}',
         "---",
         "",
         "# Evil Hook",
@@ -180,7 +180,7 @@ describe("installHooksFromArchive", () => {
       JSON.stringify({
         name: "@evil/.",
         version: "0.0.1",
-        openclaw: { hooks: ["./hooks/reserved-hook"] },
+        "forge-orchestrator": { hooks: ["./hooks/reserved-hook"] },
       }),
       "utf-8",
     );
@@ -190,7 +190,7 @@ describe("installHooksFromArchive", () => {
         "---",
         "name: reserved-hook",
         "description: Reserved hook",
-        'metadata: {"openclaw":{"events":["command:new"]}}',
+        'metadata: {"forge-orchestrator":{"events":["command:new"]}}',
         "---",
         "",
         "# Reserved Hook",
@@ -224,9 +224,9 @@ describe("installHooksFromPath", () => {
     fs.writeFileSync(
       path.join(pkgDir, "package.json"),
       JSON.stringify({
-        name: "@openclaw/test-hooks",
+        name: "@forge-orchestrator/test-hooks",
         version: "0.0.1",
-        openclaw: { hooks: ["./hooks/one-hook"] },
+        "forge-orchestrator": { hooks: ["./hooks/one-hook"] },
         dependencies: { "left-pad": "1.3.0" },
       }),
       "utf-8",
@@ -237,7 +237,7 @@ describe("installHooksFromPath", () => {
         "---",
         "name: one-hook",
         "description: One hook",
-        'metadata: {"openclaw":{"events":["command:new"]}}',
+        'metadata: {"forge-orchestrator":{"events":["command:new"]}}',
         "---",
         "",
         "# One Hook",
@@ -286,7 +286,7 @@ describe("installHooksFromPath", () => {
         "---",
         "name: my-hook",
         "description: My hook",
-        'metadata: {"openclaw":{"events":["command:new"]}}',
+        'metadata: {"forge-orchestrator":{"events":["command:new"]}}',
         "---",
         "",
         "# My Hook",

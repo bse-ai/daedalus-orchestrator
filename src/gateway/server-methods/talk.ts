@@ -92,6 +92,29 @@ export const talkHandlers: GatewayRequestHandlers = {
       configPayload.talk = talk;
     }
 
+    // Include STT config when secrets are requested (audio transcription via OpenRouter)
+    if (includeSecrets) {
+      const openrouter = (snapshot.config as Record<string, unknown>).models as
+        | Record<string, unknown>
+        | undefined;
+      const providers = openrouter?.providers as Record<string, unknown> | undefined;
+      const orConfig = providers?.openrouter as Record<string, unknown> | undefined;
+      const orApiKey =
+        typeof orConfig?.apiKey === "string" ? orConfig.apiKey.trim() : undefined;
+      const orBaseUrl =
+        typeof orConfig?.baseUrl === "string"
+          ? orConfig.baseUrl.trim()
+          : "https://openrouter.ai/api/v1";
+      if (orApiKey) {
+        configPayload.stt = {
+          provider: "openrouter",
+          apiKey: orApiKey,
+          baseUrl: orBaseUrl,
+          model: "google/gemini-2.5-flash",
+        };
+      }
+    }
+
     const sessionMainKey = snapshot.config.session?.mainKey;
     if (typeof sessionMainKey === "string") {
       configPayload.session = { mainKey: sessionMainKey };

@@ -30,7 +30,7 @@ type HomeEnvSnapshot = {
   USERPROFILE: string | undefined;
   HOMEDRIVE: string | undefined;
   HOMEPATH: string | undefined;
-  OPENCLAW_STATE_DIR: string | undefined;
+  FORGE_ORCH_STATE_DIR: string | undefined;
 };
 
 function snapshotHomeEnv(): HomeEnvSnapshot {
@@ -39,7 +39,7 @@ function snapshotHomeEnv(): HomeEnvSnapshot {
     USERPROFILE: process.env.USERPROFILE,
     HOMEDRIVE: process.env.HOMEDRIVE,
     HOMEPATH: process.env.HOMEPATH,
-    OPENCLAW_STATE_DIR: process.env.OPENCLAW_STATE_DIR,
+    FORGE_ORCH_STATE_DIR: process.env.FORGE_ORCH_STATE_DIR,
   };
 }
 
@@ -58,11 +58,11 @@ let caseId = 0;
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
   const home = path.join(fixtureRoot, `case-${++caseId}`);
-  await fs.mkdir(path.join(home, ".openclaw", "agents", "main", "sessions"), { recursive: true });
+  await fs.mkdir(path.join(home, ".forge-orchestrator", "agents", "main", "sessions"), { recursive: true });
   const envSnapshot = snapshotHomeEnv();
   process.env.HOME = home;
   process.env.USERPROFILE = home;
-  process.env.OPENCLAW_STATE_DIR = path.join(home, ".openclaw");
+  process.env.FORGE_ORCH_STATE_DIR = path.join(home, ".forge-orchestrator");
 
   if (process.platform === "win32") {
     const match = home.match(/^([A-Za-z]:)(.*)$/);
@@ -91,7 +91,7 @@ function makeAgentResult(text: string): ReplyResult {
 
 describe("block streaming", () => {
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-stream-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "forge-orchestrator-stream-"));
   });
 
   afterAll(async () => {
@@ -159,7 +159,7 @@ describe("block streaming", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "forge-orchestrator"),
             },
           },
           channels: { telegram: { allowFrom: ["*"] } },
@@ -217,7 +217,7 @@ describe("block streaming", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "forge-orchestrator"),
             },
           },
           channels: { telegram: { allowFrom: ["*"] } },
@@ -253,7 +253,7 @@ describe("block streaming", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "forge-orchestrator"),
             },
           },
           channels: { telegram: { allowFrom: ["*"], streamMode: "block" } },
@@ -280,7 +280,7 @@ describe("block streaming", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "forge-orchestrator"),
             },
           },
           channels: { whatsapp: { allowFrom: ["*"] } },
@@ -333,7 +333,7 @@ describe("block streaming", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "forge-orchestrator"),
             },
           },
           channels: { whatsapp: { allowFrom: ["*"] } },
@@ -358,7 +358,7 @@ describe("block streaming", () => {
         await Promise.resolve();
         expect(prompts.some((p) => p.includes("[Queue overflow]"))).toBe(true);
       },
-      { prefix: "openclaw-queue-" },
+      { prefix: "forge-orchestrator-queue-" },
     );
   });
 });

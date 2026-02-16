@@ -1,7 +1,7 @@
 import { createRequire } from "node:module";
 
-declare const __OPENCLAW_VERSION__: string | undefined;
-const CORE_PACKAGE_NAME = "openclaw";
+declare const __FORGE_ORCH_VERSION__: string | undefined;
+const CORE_PACKAGE_NAME = "forge-orchestrator";
 
 const PACKAGE_JSON_CANDIDATES = [
   "../package.json",
@@ -61,11 +61,11 @@ export function resolveVersionFromModuleUrl(moduleUrl: string): string | null {
   );
 }
 
-// Single source of truth for the current OpenClaw version.
+// Single source of truth for the current ForgeOrchestrator version.
 // - Embedded/bundled builds: injected define or env var.
 // - Dev/npm builds: package.json.
 export const VERSION =
-  (typeof __OPENCLAW_VERSION__ === "string" && __OPENCLAW_VERSION__) ||
-  process.env.OPENCLAW_BUNDLED_VERSION ||
+  (typeof __FORGE_ORCH_VERSION__ === "string" && __FORGE_ORCH_VERSION__) ||
+  process.env.FORGE_ORCH_BUNDLED_VERSION ||
   resolveVersionFromModuleUrl(import.meta.url) ||
   "0.0.0";

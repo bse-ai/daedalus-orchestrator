@@ -93,7 +93,7 @@ const MemorySchema = z
   .strict()
   .optional();
 
-export const OpenClawSchema = z
+export const ForgeOrchestratorSchema = z
   .object({
     meta: z
       .object({

@@ -223,25 +223,25 @@ describe("buildServiceEnvironment", () => {
     } else {
       expect(env.PATH).toContain("/usr/bin");
     }
-    expect(env.OPENCLAW_GATEWAY_PORT).toBe("18789");
-    expect(env.OPENCLAW_GATEWAY_TOKEN).toBe("secret");
-    expect(env.OPENCLAW_SERVICE_MARKER).toBe("openclaw");
-    expect(env.OPENCLAW_SERVICE_KIND).toBe("gateway");
-    expect(typeof env.OPENCLAW_SERVICE_VERSION).toBe("string");
-    expect(env.OPENCLAW_SYSTEMD_UNIT).toBe("openclaw-gateway.service");
+    expect(env.FORGE_ORCH_GATEWAY_PORT).toBe("18789");
+    expect(env.FORGE_ORCH_GATEWAY_TOKEN).toBe("secret");
+    expect(env.FORGE_ORCH_SERVICE_MARKER).toBe("forge-orchestrator");
+    expect(env.FORGE_ORCH_SERVICE_KIND).toBe("gateway");
+    expect(typeof env.FORGE_ORCH_SERVICE_VERSION).toBe("string");
+    expect(env.FORGE_ORCH_SYSTEMD_UNIT).toBe("forge-orchestrator-gateway.service");
     if (process.platform === "darwin") {
-      expect(env.OPENCLAW_LAUNCHD_LABEL).toBe("ai.openclaw.gateway");
+      expect(env.FORGE_ORCH_LAUNCHD_LABEL).toBe("ai.forge-orchestrator.gateway");
     }
   });
 
   it("uses profile-specific unit and label", () => {
     const env = buildServiceEnvironment({
-      env: { HOME: "/home/user", OPENCLAW_PROFILE: "work" },
+      env: { HOME: "/home/user", FORGE_ORCH_PROFILE: "work" },
       port: 18789,
     });
-    expect(env.OPENCLAW_SYSTEMD_UNIT).toBe("openclaw-gateway-work.service");
+    expect(env.FORGE_ORCH_SYSTEMD_UNIT).toBe("forge-orchestrator-gateway-work.service");
     if (process.platform === "darwin") {
-      expect(env.OPENCLAW_LAUNCHD_LABEL).toBe("ai.openclaw.work");
+      expect(env.FORGE_ORCH_LAUNCHD_LABEL).toBe("ai.forge-orchestrator.work");
     }
   });
 });

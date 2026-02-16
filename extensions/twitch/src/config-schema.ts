@@ -1,4 +1,4 @@
-import { MarkdownConfigSchema } from "openclaw/plugin-sdk";
+import { MarkdownConfigSchema } from "forge-orchestrator/plugin-sdk";
 import { z } from "zod";
 
 /**

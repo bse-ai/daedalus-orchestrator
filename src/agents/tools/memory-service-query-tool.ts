@@ -1,6 +1,6 @@
 import { Type } from "@sinclair/typebox";
 
-import type { OpenClawConfig } from "../../config/config.js";
+import type { ForgeOrchestratorConfig } from "../../config/config.js";
 import {
   createMemoryServiceClient,
   DEFAULT_MEMORY_SERVICE_ENDPOINT,
@@ -17,7 +17,7 @@ const MemoryServiceQuerySchema = Type.Object({
 });
 
 export function createMemoryServiceQueryTool(options: {
-  config?: OpenClawConfig;
+  config?: ForgeOrchestratorConfig;
   agentSessionKey?: string;
 }): AnyAgentTool | null {
   const cfg = options.config;

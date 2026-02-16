@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
-import type { OpenClawConfig } from "../../config/config.js";
+import type { ForgeOrchestratorConfig } from "../../config/config.js";
 import { createGraphitiSearchTool } from "./graphiti-search-tool.js";
 
 const mocks = vi.hoisted(() => ({
@@ -30,7 +30,7 @@ describe("graphiti_search tool", () => {
   it("returns null when memorySearch config is missing", () => {
     const config = {
       agents: {},
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createGraphitiSearchTool({ config });
     expect(tool).toBeNull();
@@ -47,7 +47,7 @@ describe("graphiti_search tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createGraphitiSearchTool({ config });
     expect(tool).toBeNull();
@@ -65,7 +65,7 @@ describe("graphiti_search tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createGraphitiSearchTool({ config });
     expect(tool).not.toBeNull();
@@ -91,7 +91,7 @@ describe("graphiti_search tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createGraphitiSearchTool({ config });
     expect(tool).not.toBeNull();
@@ -128,7 +128,7 @@ describe("graphiti_search tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createGraphitiSearchTool({ config });
     expect(tool).not.toBeNull();
@@ -166,7 +166,7 @@ describe("graphiti_search tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createGraphitiSearchTool({ config });
     expect(tool).not.toBeNull();
@@ -203,7 +203,7 @@ describe("graphiti_search tool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createGraphitiSearchTool({ config });
     expect(tool).not.toBeNull();
@@ -245,7 +245,7 @@ describe("graphiti_search tool", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as ForgeOrchestratorConfig;
 
     const tool = createGraphitiSearchTool({
       config,

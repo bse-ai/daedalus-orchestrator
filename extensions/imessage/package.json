@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/imessage",
+  "name": "@forge-orchestrator/imessage",
   "version": "2026.2.13",
   "private": true,
-  "description": "OpenClaw iMessage channel plugin",
+  "description": "ForgeOrchestrator iMessage channel plugin",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "forge-orchestrator": "workspace:*"
   },
-  "openclaw": {
+  "forge-orchestrator": {
     "extensions": [
       "./index.ts"
     ]

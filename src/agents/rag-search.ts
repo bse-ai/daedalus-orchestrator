@@ -1,10 +1,10 @@
 /**
  * RAG search configuration resolution utilities.
  * Provides helpers to resolve Graphiti, LightRAG, and Memory Service
- * configurations from OpenClawConfig.
+ * configurations from ForgeOrchestratorConfig.
  */
 
-import type { OpenClawConfig } from "../config/config.js";
+import type { ForgeOrchestratorConfig } from "../config/config.js";
 import type { GraphitiConfig, LightRAGConfig, MemoryServiceConfig } from "../config/types.rag.js";
 import {
   DEFAULT_GRAPHITI_ENDPOINT,
@@ -119,7 +119,7 @@ function mergeMemoryServiceConfig(
  * Returns null for each service that is disabled.
  */
 export function resolveRAGSearchConfig(
-  cfg: OpenClawConfig,
+  cfg: ForgeOrchestratorConfig,
   agentId: string,
 ): ResolvedRAGSearchConfig {
   const defaults = cfg.agents?.defaults?.memorySearch;
@@ -142,7 +142,7 @@ export function resolveRAGSearchConfig(
 /**
  * Check if Graphiti is enabled for the given agent.
  */
-export function isGraphitiEnabled(cfg: OpenClawConfig, agentId: string): boolean {
+export function isGraphitiEnabled(cfg: ForgeOrchestratorConfig, agentId: string): boolean {
   const resolved = resolveRAGSearchConfig(cfg, agentId);
   return resolved.graphiti !== null;
 }
@@ -150,7 +150,7 @@ export function isGraphitiEnabled(cfg: OpenClawConfig, agentId: string): boolean
 /**
  * Check if LightRAG is enabled for the given agent.
  */
-export function isLightRAGEnabled(cfg: OpenClawConfig, agentId: string): boolean {
+export function isLightRAGEnabled(cfg: ForgeOrchestratorConfig, agentId: string): boolean {
   const resolved = resolveRAGSearchConfig(cfg, agentId);
   return resolved.lightrag !== null;
 }
@@ -158,7 +158,7 @@ export function isLightRAGEnabled(cfg: OpenClawConfig, agentId: string): boolean
 /**
  * Check if Memory Service is enabled for the given agent.
  */
-export function isMemoryServiceEnabled(cfg: OpenClawConfig, agentId: string): boolean {
+export function isMemoryServiceEnabled(cfg: ForgeOrchestratorConfig, agentId: string): boolean {
   const resolved = resolveRAGSearchConfig(cfg, agentId);
   return resolved.memoryService !== null;
 }
@@ -167,7 +167,7 @@ export function isMemoryServiceEnabled(cfg: OpenClawConfig, agentId: string): bo
  * Get the Graphiti endpoint URL for the given agent.
  * Returns null if Graphiti is disabled.
  */
-export function getGraphitiEndpoint(cfg: OpenClawConfig, agentId: string): string | null {
+export function getGraphitiEndpoint(cfg: ForgeOrchestratorConfig, agentId: string): string | null {
   const resolved = resolveRAGSearchConfig(cfg, agentId);
   return resolved.graphiti?.endpoint ?? null;
 }
@@ -176,7 +176,7 @@ export function getGraphitiEndpoint(cfg: OpenClawConfig, agentId: string): strin
  * Get the LightRAG endpoint URL for the given agent.
  * Returns null if LightRAG is disabled.
  */
-export function getLightRAGEndpoint(cfg: OpenClawConfig, agentId: string): string | null {
+export function getLightRAGEndpoint(cfg: ForgeOrchestratorConfig, agentId: string): string | null {
   const resolved = resolveRAGSearchConfig(cfg, agentId);
   return resolved.lightrag?.endpoint ?? null;
 }
@@ -185,7 +185,7 @@ export function getLightRAGEndpoint(cfg: OpenClawConfig, agentId: string): strin
  * Get the Memory Service endpoint URL for the given agent.
  * Returns null if Memory Service is disabled.
  */
-export function getMemoryServiceEndpoint(cfg: OpenClawConfig, agentId: string): string | null {
+export function getMemoryServiceEndpoint(cfg: ForgeOrchestratorConfig, agentId: string): string | null {
   const resolved = resolveRAGSearchConfig(cfg, agentId);
   return resolved.memoryService?.endpoint ?? null;
 }

@@ -5,7 +5,7 @@ import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import handler from "./handler.js";
 import { createHookEvent } from "../../hooks.js";
 import type { AgentBootstrapHookContext } from "../../internal-hooks.js";
-import type { OpenClawConfig } from "../../../config/config.js";
+import type { ForgeOrchestratorConfig } from "../../../config/config.js";
 import { makeTempWorkspace } from "../../../test-helpers/workspace.js";
 import * as GraphitiClientModule from "../../../memory/graphiti-client.js";
 import * as LightRAGClientModule from "../../../memory/lightrag-client.js";
@@ -21,7 +21,7 @@ describe("rag-context-inject hook", () => {
   });
 
   it("skips non-bootstrap events", async () => {
-    const tempDir = await makeTempWorkspace("openclaw-rag-");
+    const tempDir = await makeTempWorkspace("forge-orchestrator-rag-");
 
     const event = createHookEvent("command", "new", "agent:main:main", {
       workspaceDir: tempDir,
@@ -35,9 +35,9 @@ describe("rag-context-inject hook", () => {
   });
 
   it("skips when all RAG services are disabled", async () => {
-    const tempDir = await makeTempWorkspace("openclaw-rag-");
+    const tempDir = await makeTempWorkspace("forge-orchestrator-rag-");
 
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       agents: {
         defaults: {
           workspace: tempDir,
@@ -65,9 +65,9 @@ describe("rag-context-inject hook", () => {
   });
 
   it("skips when hook is explicitly disabled", async () => {
-    const tempDir = await makeTempWorkspace("openclaw-rag-");
+    const tempDir = await makeTempWorkspace("forge-orchestrator-rag-");
 
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       agents: {
         defaults: {
           workspace: tempDir,
@@ -100,7 +100,7 @@ describe("rag-context-inject hook", () => {
   });
 
   it("queries Graphiti and injects context when enabled", async () => {
-    const tempDir = await makeTempWorkspace("openclaw-rag-");
+    const tempDir = await makeTempWorkspace("forge-orchestrator-rag-");
 
     // Mock Graphiti client
     const mockSearch = vi.fn().mockResolvedValue({
@@ -131,7 +131,7 @@ describe("rag-context-inject hook", () => {
       };
     } as any);
 
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       agents: {
         defaults: {
           workspace: tempDir,
@@ -171,7 +171,7 @@ describe("rag-context-inject hook", () => {
   });
 
   it("queries LightRAG and injects context when enabled", async () => {
-    const tempDir = await makeTempWorkspace("openclaw-rag-");
+    const tempDir = await makeTempWorkspace("forge-orchestrator-rag-");
 
     // Mock LightRAG client
     const mockQuery = vi.fn().mockResolvedValue({
@@ -189,7 +189,7 @@ describe("rag-context-inject hook", () => {
       };
     } as any);
 
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       agents: {
         defaults: {
           workspace: tempDir,
@@ -234,7 +234,7 @@ describe("rag-context-inject hook", () => {
   });
 
   it("queries Memory Service and injects context when enabled", async () => {
-    const tempDir = await makeTempWorkspace("openclaw-rag-");
+    const tempDir = await makeTempWorkspace("forge-orchestrator-rag-");
 
     // Mock Memory Service client
     const mockSearch = vi.fn().mockResolvedValue({
@@ -263,7 +263,7 @@ describe("rag-context-inject hook", () => {
       };
     } as any);
 
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       agents: {
         defaults: {
           workspace: tempDir,
@@ -302,7 +302,7 @@ describe("rag-context-inject hook", () => {
   });
 
   it("combines results from multiple RAG sources", async () => {
-    const tempDir = await makeTempWorkspace("openclaw-rag-");
+    const tempDir = await makeTempWorkspace("forge-orchestrator-rag-");
 
     // Mock all three clients
     vi.spyOn(GraphitiClientModule, "GraphitiClient").mockImplementation(function () {
@@ -334,7 +334,7 @@ describe("rag-context-inject hook", () => {
       };
     } as any);
 
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       agents: {
         defaults: {
           workspace: tempDir,
@@ -366,7 +366,7 @@ describe("rag-context-inject hook", () => {
   });
 
   it("handles service unavailability gracefully", async () => {
-    const tempDir = await makeTempWorkspace("openclaw-rag-");
+    const tempDir = await makeTempWorkspace("forge-orchestrator-rag-");
 
     // Mock unhealthy service
     vi.spyOn(GraphitiClientModule, "GraphitiClient").mockImplementation(function () {
@@ -376,7 +376,7 @@ describe("rag-context-inject hook", () => {
       };
     } as any);
 
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       agents: {
         defaults: {
           workspace: tempDir,
@@ -405,7 +405,7 @@ describe("rag-context-inject hook", () => {
   });
 
   it("handles query errors gracefully", async () => {
-    const tempDir = await makeTempWorkspace("openclaw-rag-");
+    const tempDir = await makeTempWorkspace("forge-orchestrator-rag-");
 
     // Mock service that throws error
     vi.spyOn(GraphitiClientModule, "GraphitiClient").mockImplementation(function () {
@@ -415,7 +415,7 @@ describe("rag-context-inject hook", () => {
       };
     } as any);
 
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       agents: {
         defaults: {
           workspace: tempDir,
@@ -444,7 +444,7 @@ describe("rag-context-inject hook", () => {
   });
 
   it("respects custom max limits from hook config", async () => {
-    const tempDir = await makeTempWorkspace("openclaw-rag-");
+    const tempDir = await makeTempWorkspace("forge-orchestrator-rag-");
 
     const mockSearch = vi.fn().mockResolvedValue({
       entities: [],
@@ -458,7 +458,7 @@ describe("rag-context-inject hook", () => {
       };
     } as any);
 
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       agents: {
         defaults: {
           workspace: tempDir,
@@ -500,7 +500,7 @@ describe("rag-context-inject hook", () => {
   });
 
   it("handles empty results from all sources", async () => {
-    const tempDir = await makeTempWorkspace("openclaw-rag-");
+    const tempDir = await makeTempWorkspace("forge-orchestrator-rag-");
 
     // Mock services returning empty results
     vi.spyOn(GraphitiClientModule, "GraphitiClient").mockImplementation(function () {
@@ -532,7 +532,7 @@ describe("rag-context-inject hook", () => {
       };
     } as any);
 
-    const cfg: OpenClawConfig = {
+    const cfg: ForgeOrchestratorConfig = {
       agents: {
         defaults: {
           workspace: tempDir,

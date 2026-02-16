@@ -39,7 +39,7 @@ exit 0
 }
 
 async function createDockerSetupSandbox(): Promise<DockerSetupSandbox> {
-  const rootDir = await mkdtemp(join(tmpdir(), "openclaw-docker-setup-"));
+  const rootDir = await mkdtemp(join(tmpdir(), "forge-orchestrator-docker-setup-"));
   const scriptPath = join(rootDir, "docker-setup.sh");
   const dockerfilePath = join(rootDir, "Dockerfile");
   const composePath = join(rootDir, "docker-compose.yml");
@@ -51,7 +51,7 @@ async function createDockerSetupSandbox(): Promise<DockerSetupSandbox> {
   await writeFile(dockerfilePath, "FROM scratch\n");
   await writeFile(
     composePath,
-    "services:\n  openclaw-gateway:\n    image: noop\n  openclaw-cli:\n    image: noop\n",
+    "services:\n  forge-orchestrator-gateway:\n    image: noop\n  forge-orchestrator-cli:\n    image: noop\n",
   );
   await writeDockerStub(binDir, logPath);
 
@@ -66,9 +66,9 @@ function createEnv(
     ...process.env,
     PATH: `${sandbox.binDir}:${process.env.PATH ?? ""}`,
     DOCKER_STUB_LOG: sandbox.logPath,
-    OPENCLAW_GATEWAY_TOKEN: "test-token",
-    OPENCLAW_CONFIG_DIR: join(sandbox.rootDir, "config"),
-    OPENCLAW_WORKSPACE_DIR: join(sandbox.rootDir, "openclaw"),
+    FORGE_ORCH_GATEWAY_TOKEN: "test-token",
+    FORGE_ORCH_CONFIG_DIR: join(sandbox.rootDir, "config"),
+    FORGE_ORCH_WORKSPACE_DIR: join(sandbox.rootDir, "forge-orchestrator"),
     ...overrides,
   };
 }
@@ -91,47 +91,47 @@ describe("docker-setup.sh", () => {
     const defaultsResult = spawnSync("bash", [sandbox.scriptPath], {
       cwd: sandbox.rootDir,
       env: createEnv(sandbox, {
-        OPENCLAW_DOCKER_APT_PACKAGES: undefined,
-        OPENCLAW_EXTRA_MOUNTS: undefined,
-        OPENCLAW_HOME_VOLUME: undefined,
+        FORGE_ORCH_DOCKER_APT_PACKAGES: undefined,
+        FORGE_ORCH_EXTRA_MOUNTS: undefined,
+        FORGE_ORCH_HOME_VOLUME: undefined,
       }),
       encoding: "utf8",
     });
     expect(defaultsResult.status).toBe(0);
     const defaultsEnvFile = await readFile(join(sandbox.rootDir, ".env"), "utf8");
-    expect(defaultsEnvFile).toContain("OPENCLAW_DOCKER_APT_PACKAGES=");
-    expect(defaultsEnvFile).toContain("OPENCLAW_EXTRA_MOUNTS=");
-    expect(defaultsEnvFile).toContain("OPENCLAW_HOME_VOLUME=");
+    expect(defaultsEnvFile).toContain("FORGE_ORCH_DOCKER_APT_PACKAGES=");
+    expect(defaultsEnvFile).toContain("FORGE_ORCH_EXTRA_MOUNTS=");
+    expect(defaultsEnvFile).toContain("FORGE_ORCH_HOME_VOLUME=");
 
     const homeVolumeResult = spawnSync("bash", [sandbox.scriptPath], {
       cwd: sandbox.rootDir,
       env: createEnv(sandbox, {
-        OPENCLAW_EXTRA_MOUNTS: "",
-        OPENCLAW_HOME_VOLUME: "openclaw-home",
+        FORGE_ORCH_EXTRA_MOUNTS: "",
+        FORGE_ORCH_HOME_VOLUME: "forge-orchestrator-home",
       }),
       encoding: "utf8",
     });
     expect(homeVolumeResult.status).toBe(0);
     const extraCompose = await readFile(join(sandbox.rootDir, "docker-compose.extra.yml"), "utf8");
-    expect(extraCompose).toContain("openclaw-home:/home/node");
+    expect(extraCompose).toContain("forge-orchestrator-home:/home/node");
     expect(extraCompose).toContain("volumes:");
-    expect(extraCompose).toContain("openclaw-home:");
+    expect(extraCompose).toContain("forge-orchestrator-home:");
 
     await writeFile(sandbox.logPath, "");
     const aptResult = spawnSync("bash", [sandbox.scriptPath], {
       cwd: sandbox.rootDir,
       env: createEnv(sandbox, {
-        OPENCLAW_DOCKER_APT_PACKAGES: "ffmpeg build-essential",
-        OPENCLAW_EXTRA_MOUNTS: "",
-        OPENCLAW_HOME_VOLUME: "",
+        FORGE_ORCH_DOCKER_APT_PACKAGES: "ffmpeg build-essential",
+        FORGE_ORCH_EXTRA_MOUNTS: "",
+        FORGE_ORCH_HOME_VOLUME: "",
       }),
       encoding: "utf8",
     });
     expect(aptResult.status).toBe(0);
     const aptEnvFile = await readFile(join(sandbox.rootDir, ".env"), "utf8");
-    expect(aptEnvFile).toContain("OPENCLAW_DOCKER_APT_PACKAGES=ffmpeg build-essential");
+    expect(aptEnvFile).toContain("FORGE_ORCH_DOCKER_APT_PACKAGES=ffmpeg build-essential");
     const log = await readFile(sandbox.logPath, "utf8");
-    expect(log).toContain("--build-arg OPENCLAW_DOCKER_APT_PACKAGES=ffmpeg build-essential");
+    expect(log).toContain("--build-arg FORGE_ORCH_DOCKER_APT_PACKAGES=ffmpeg build-essential");
   });
 
   it("avoids associative arrays so the script remains Bash 3.2-compatible", async () => {
@@ -154,8 +154,8 @@ describe("docker-setup.sh", () => {
 
     const sandbox = await createDockerSetupSandbox();
     const env = createEnv(sandbox, {
-      OPENCLAW_EXTRA_MOUNTS: "",
-      OPENCLAW_HOME_VOLUME: "",
+      FORGE_ORCH_EXTRA_MOUNTS: "",
+      FORGE_ORCH_HOME_VOLUME: "",
     });
     const result = spawnSync(systemBash, [sandbox.scriptPath], {
       cwd: sandbox.rootDir,

@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/mattermost",
+  "name": "@forge-orchestrator/mattermost",
   "version": "2026.2.13",
   "private": true,
-  "description": "OpenClaw Mattermost channel plugin",
+  "description": "ForgeOrchestrator Mattermost channel plugin",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "forge-orchestrator": "workspace:*"
   },
-  "openclaw": {
+  "forge-orchestrator": {
     "extensions": [
       "./index.ts"
     ],
@@ -21,7 +21,7 @@
       "order": 65
     },
     "install": {
-      "npmSpec": "@openclaw/mattermost",
+      "npmSpec": "@forge-orchestrator/mattermost",
       "localPath": "extensions/mattermost",
       "defaultChoice": "npm"
     }

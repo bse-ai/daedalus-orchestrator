@@ -1,7 +1,7 @@
 ---
-summary: "Symptom first troubleshooting hub for OpenClaw"
+summary: "Symptom first troubleshooting hub for ForgeOrchestrator"
 read_when:
-  - OpenClaw is not working and you need the fastest path to a fix
+  - ForgeOrchestrator is not working and you need the fastest path to a fix
   - You want a triage flow before diving into deep runbooks
 title: "Troubleshooting"
 ---
@@ -15,30 +15,30 @@ If you only have 2 minutes, use this page as a triage front door.
 Run this exact ladder in order:
 
 ```bash
-openclaw status
-openclaw status --all
-openclaw gateway probe
-openclaw gateway status
-openclaw doctor
-openclaw channels status --probe
-openclaw logs --follow
+forge-orchestrator status
+forge-orchestrator status --all
+forge-orchestrator gateway probe
+forge-orchestrator gateway status
+forge-orchestrator doctor
+forge-orchestrator channels status --probe
+forge-orchestrator logs --follow
 ```
 
 Good output in one line:
 
-- `openclaw status` → shows configured channels and no obvious auth errors.
-- `openclaw status --all` → full report is present and shareable.
-- `openclaw gateway probe` → expected gateway target is reachable.
-- `openclaw gateway status` → `Runtime: running` and `RPC probe: ok`.
-- `openclaw doctor` → no blocking config/service errors.
-- `openclaw channels status --probe` → channels report `connected` or `ready`.
-- `openclaw logs --follow` → steady activity, no repeating fatal errors.
+- `forge-orchestrator status` → shows configured channels and no obvious auth errors.
+- `forge-orchestrator status --all` → full report is present and shareable.
+- `forge-orchestrator gateway probe` → expected gateway target is reachable.
+- `forge-orchestrator gateway status` → `Runtime: running` and `RPC probe: ok`.
+- `forge-orchestrator doctor` → no blocking config/service errors.
+- `forge-orchestrator channels status --probe` → channels report `connected` or `ready`.
+- `forge-orchestrator logs --follow` → steady activity, no repeating fatal errors.
 
 ## Decision tree
 
 ```mermaid
 flowchart TD
-  A[OpenClaw is not working] --> B{What breaks first}
+  A[ForgeOrchestrator is not working] --> B{What breaks first}
   B --> C[No replies]
   B --> D[Dashboard or Control UI will not connect]
   B --> E[Gateway will not start or service not running]
@@ -59,11 +59,11 @@ flowchart TD
 <AccordionGroup>
   <Accordion title="No replies">
     ```bash
-    openclaw status
-    openclaw gateway status
-    openclaw channels status --probe
-    openclaw pairing list <channel>
-    openclaw logs --follow
+    forge-orchestrator status
+    forge-orchestrator gateway status
+    forge-orchestrator channels status --probe
+    forge-orchestrator pairing list <channel>
+    forge-orchestrator logs --follow
     ```
 
     Good output looks like:
@@ -89,16 +89,16 @@ flowchart TD
 
   <Accordion title="Dashboard or Control UI will not connect">
     ```bash
-    openclaw status
-    openclaw gateway status
-    openclaw logs --follow
-    openclaw doctor
-    openclaw channels status --probe
+    forge-orchestrator status
+    forge-orchestrator gateway status
+    forge-orchestrator logs --follow
+    forge-orchestrator doctor
+    forge-orchestrator channels status --probe
     ```
 
     Good output looks like:
 
-    - `Dashboard: http://...` is shown in `openclaw gateway status`
+    - `Dashboard: http://...` is shown in `forge-orchestrator gateway status`
     - `RPC probe: ok`
     - No auth loop in logs
 
@@ -118,11 +118,11 @@ flowchart TD
 
   <Accordion title="Gateway will not start or service installed but not running">
     ```bash
-    openclaw status
-    openclaw gateway status
-    openclaw logs --follow
-    openclaw doctor
-    openclaw channels status --probe
+    forge-orchestrator status
+    forge-orchestrator gateway status
+    forge-orchestrator logs --follow
+    forge-orchestrator doctor
+    forge-orchestrator channels status --probe
     ```
 
     Good output looks like:
@@ -147,11 +147,11 @@ flowchart TD
 
   <Accordion title="Channel connects but messages do not flow">
     ```bash
-    openclaw status
-    openclaw gateway status
-    openclaw logs --follow
-    openclaw doctor
-    openclaw channels status --probe
+    forge-orchestrator status
+    forge-orchestrator gateway status
+    forge-orchestrator logs --follow
+    forge-orchestrator doctor
+    forge-orchestrator channels status --probe
     ```
 
     Good output looks like:
@@ -175,12 +175,12 @@ flowchart TD
 
   <Accordion title="Cron or heartbeat did not fire or did not deliver">
     ```bash
-    openclaw status
-    openclaw gateway status
-    openclaw cron status
-    openclaw cron list
-    openclaw cron runs --id <jobId> --limit 20
-    openclaw logs --follow
+    forge-orchestrator status
+    forge-orchestrator gateway status
+    forge-orchestrator cron status
+    forge-orchestrator cron list
+    forge-orchestrator cron runs --id <jobId> --limit 20
+    forge-orchestrator logs --follow
     ```
 
     Good output looks like:
@@ -206,11 +206,11 @@ flowchart TD
 
   <Accordion title="Node is paired but tool fails camera canvas screen exec">
     ```bash
-    openclaw status
-    openclaw gateway status
-    openclaw nodes status
-    openclaw nodes describe --node <idOrNameOrIp>
-    openclaw logs --follow
+    forge-orchestrator status
+    forge-orchestrator gateway status
+    forge-orchestrator nodes status
+    forge-orchestrator nodes describe --node <idOrNameOrIp>
+    forge-orchestrator logs --follow
     ```
 
     Good output looks like:
@@ -236,17 +236,17 @@ flowchart TD
 
   <Accordion title="Browser tool fails">
     ```bash
-    openclaw status
-    openclaw gateway status
-    openclaw browser status
-    openclaw logs --follow
-    openclaw doctor
+    forge-orchestrator status
+    forge-orchestrator gateway status
+    forge-orchestrator browser status
+    forge-orchestrator logs --follow
+    forge-orchestrator doctor
     ```
 
     Good output looks like:
 
     - Browser status shows `running: true` and a chosen browser/profile.
-    - `openclaw` profile starts or `chrome` relay has an attached tab.
+    - `forge-orchestrator` profile starts or `chrome` relay has an attached tab.
 
     Common log signatures:
 

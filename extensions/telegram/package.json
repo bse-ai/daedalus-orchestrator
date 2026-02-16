@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/telegram",
+  "name": "@forge-orchestrator/telegram",
   "version": "2026.2.13",
   "private": true,
-  "description": "OpenClaw Telegram channel plugin",
+  "description": "ForgeOrchestrator Telegram channel plugin",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "forge-orchestrator": "workspace:*"
   },
-  "openclaw": {
+  "forge-orchestrator": {
     "extensions": [
       "./index.ts"
     ]

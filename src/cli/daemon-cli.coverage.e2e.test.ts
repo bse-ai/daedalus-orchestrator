@@ -81,43 +81,43 @@ vi.mock("./progress.js", () => ({
 
 describe("daemon-cli coverage", () => {
   const originalEnv = {
-    OPENCLAW_STATE_DIR: process.env.OPENCLAW_STATE_DIR,
-    OPENCLAW_CONFIG_PATH: process.env.OPENCLAW_CONFIG_PATH,
-    OPENCLAW_GATEWAY_PORT: process.env.OPENCLAW_GATEWAY_PORT,
-    OPENCLAW_PROFILE: process.env.OPENCLAW_PROFILE,
+    FORGE_ORCH_STATE_DIR: process.env.FORGE_ORCH_STATE_DIR,
+    FORGE_ORCH_CONFIG_PATH: process.env.FORGE_ORCH_CONFIG_PATH,
+    FORGE_ORCH_GATEWAY_PORT: process.env.FORGE_ORCH_GATEWAY_PORT,
+    FORGE_ORCH_PROFILE: process.env.FORGE_ORCH_PROFILE,
   };
 
   beforeEach(() => {
-    process.env.OPENCLAW_STATE_DIR = "/tmp/openclaw-cli-state";
-    process.env.OPENCLAW_CONFIG_PATH = "/tmp/openclaw-cli-state/openclaw.json";
-    delete process.env.OPENCLAW_GATEWAY_PORT;
-    delete process.env.OPENCLAW_PROFILE;
+    process.env.FORGE_ORCH_STATE_DIR = "/tmp/forge-orchestrator-cli-state";
+    process.env.FORGE_ORCH_CONFIG_PATH = "/tmp/forge-orchestrator-cli-state/forge-orchestrator.json";
+    delete process.env.FORGE_ORCH_GATEWAY_PORT;
+    delete process.env.FORGE_ORCH_PROFILE;
     serviceReadCommand.mockResolvedValue(null);
   });
 
   afterEach(() => {
-    if (originalEnv.OPENCLAW_STATE_DIR !== undefined) {
-      process.env.OPENCLAW_STATE_DIR = originalEnv.OPENCLAW_STATE_DIR;
+    if (originalEnv.FORGE_ORCH_STATE_DIR !== undefined) {
+      process.env.FORGE_ORCH_STATE_DIR = originalEnv.FORGE_ORCH_STATE_DIR;
     } else {
-      delete process.env.OPENCLAW_STATE_DIR;
+      delete process.env.FORGE_ORCH_STATE_DIR;
     }
 
-    if (originalEnv.OPENCLAW_CONFIG_PATH !== undefined) {
-      process.env.OPENCLAW_CONFIG_PATH = originalEnv.OPENCLAW_CONFIG_PATH;
+    if (originalEnv.FORGE_ORCH_CONFIG_PATH !== undefined) {
+      process.env.FORGE_ORCH_CONFIG_PATH = originalEnv.FORGE_ORCH_CONFIG_PATH;
     } else {
-      delete process.env.OPENCLAW_CONFIG_PATH;
+      delete process.env.FORGE_ORCH_CONFIG_PATH;
     }
 
-    if (originalEnv.OPENCLAW_GATEWAY_PORT !== undefined) {
-      process.env.OPENCLAW_GATEWAY_PORT = originalEnv.OPENCLAW_GATEWAY_PORT;
+    if (originalEnv.FORGE_ORCH_GATEWAY_PORT !== undefined) {
+      process.env.FORGE_ORCH_GATEWAY_PORT = originalEnv.FORGE_ORCH_GATEWAY_PORT;
     } else {
-      delete process.env.OPENCLAW_GATEWAY_PORT;
+      delete process.env.FORGE_ORCH_GATEWAY_PORT;
     }
 
-    if (originalEnv.OPENCLAW_PROFILE !== undefined) {
-      process.env.OPENCLAW_PROFILE = originalEnv.OPENCLAW_PROFILE;
+    if (originalEnv.FORGE_ORCH_PROFILE !== undefined) {
+      process.env.FORGE_ORCH_PROFILE = originalEnv.FORGE_ORCH_PROFILE;
     } else {
-      delete process.env.OPENCLAW_PROFILE;
+      delete process.env.FORGE_ORCH_PROFILE;
     }
   });
 
@@ -148,10 +148,10 @@ describe("daemon-cli coverage", () => {
     serviceReadCommand.mockResolvedValueOnce({
       programArguments: ["/bin/node", "cli", "gateway", "--port", "19001"],
       environment: {
-        OPENCLAW_PROFILE: "dev",
-        OPENCLAW_STATE_DIR: "/tmp/openclaw-daemon-state",
-        OPENCLAW_CONFIG_PATH: "/tmp/openclaw-daemon-state/openclaw.json",
-        OPENCLAW_GATEWAY_PORT: "19001",
+        FORGE_ORCH_PROFILE: "dev",
+        FORGE_ORCH_STATE_DIR: "/tmp/forge-orchestrator-daemon-state",
+        FORGE_ORCH_CONFIG_PATH: "/tmp/forge-orchestrator-daemon-state/forge-orchestrator.json",
+        FORGE_ORCH_GATEWAY_PORT: "19001",
       },
       sourcePath: "/tmp/bot.molt.gateway.plist",
     });

@@ -34,6 +34,7 @@ class MainActivity : ComponentActivity() {
     applyImmersiveMode()
     requestDiscoveryPermissionsIfNeeded()
     requestNotificationPermissionIfNeeded()
+    requestSmsReceivePermissionIfNeeded()
     NodeForegroundService.start(this)
     permissionRequester = PermissionRequester(this)
     screenCaptureRequester = ScreenCaptureRequester(this)
@@ -125,6 +126,17 @@ class MainActivity : ComponentActivity() {
       ) == android.content.pm.PackageManager.PERMISSION_GRANTED
     if (!ok) {
       requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 102)
+    }
+  }
+
+  private fun requestSmsReceivePermissionIfNeeded() {
+    val ok =
+      ContextCompat.checkSelfPermission(
+        this,
+        Manifest.permission.RECEIVE_SMS,
+      ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+    if (!ok) {
+      requestPermissions(arrayOf(Manifest.permission.RECEIVE_SMS), 103)
     }
   }
 }

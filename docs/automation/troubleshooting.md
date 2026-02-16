@@ -14,28 +14,28 @@ Use this page for scheduler and delivery issues (`cron` + `heartbeat`).
 ## Command ladder
 
 ```bash
-openclaw status
-openclaw gateway status
-openclaw logs --follow
-openclaw doctor
-openclaw channels status --probe
+forge-orchestrator status
+forge-orchestrator gateway status
+forge-orchestrator logs --follow
+forge-orchestrator doctor
+forge-orchestrator channels status --probe
 ```
 
 Then run automation checks:
 
 ```bash
-openclaw cron status
-openclaw cron list
-openclaw system heartbeat last
+forge-orchestrator cron status
+forge-orchestrator cron list
+forge-orchestrator system heartbeat last
 ```
 
 ## Cron not firing
 
 ```bash
-openclaw cron status
-openclaw cron list
-openclaw cron runs --id <jobId> --limit 20
-openclaw logs --follow
+forge-orchestrator cron status
+forge-orchestrator cron list
+forge-orchestrator cron runs --id <jobId> --limit 20
+forge-orchestrator logs --follow
 ```
 
 Good output looks like:
@@ -53,10 +53,10 @@ Common signatures:
 ## Cron fired but no delivery
 
 ```bash
-openclaw cron runs --id <jobId> --limit 20
-openclaw cron list
-openclaw channels status --probe
-openclaw logs --follow
+forge-orchestrator cron runs --id <jobId> --limit 20
+forge-orchestrator cron list
+forge-orchestrator channels status --probe
+forge-orchestrator logs --follow
 ```
 
 Good output looks like:
@@ -74,10 +74,10 @@ Common signatures:
 ## Heartbeat suppressed or skipped
 
 ```bash
-openclaw system heartbeat last
-openclaw logs --follow
-openclaw config get agents.defaults.heartbeat
-openclaw channels status --probe
+forge-orchestrator system heartbeat last
+forge-orchestrator logs --follow
+forge-orchestrator config get agents.defaults.heartbeat
+forge-orchestrator channels status --probe
 ```
 
 Good output looks like:
@@ -95,11 +95,11 @@ Common signatures:
 ## Timezone and activeHours gotchas
 
 ```bash
-openclaw config get agents.defaults.heartbeat.activeHours
-openclaw config get agents.defaults.heartbeat.activeHours.timezone
-openclaw config get agents.defaults.userTimezone || echo "agents.defaults.userTimezone not set"
-openclaw cron list
-openclaw logs --follow
+forge-orchestrator config get agents.defaults.heartbeat.activeHours
+forge-orchestrator config get agents.defaults.heartbeat.activeHours.timezone
+forge-orchestrator config get agents.defaults.userTimezone || echo "agents.defaults.userTimezone not set"
+forge-orchestrator cron list
+forge-orchestrator logs --follow
 ```
 
 Quick rules:

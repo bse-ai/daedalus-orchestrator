@@ -149,7 +149,7 @@ function appendAssistantTranscriptMessage(params: {
     usage,
     // Make these explicit so downstream tooling never treats this as model output.
     api: "openai-responses",
-    provider: "openclaw",
+    provider: "forge-orchestrator",
     model: "gateway-injected",
   };
 
@@ -474,7 +474,7 @@ export const chatHandlers: GatewayRequestHandlers = {
       const clientInfo = client?.connect?.client;
       // Inject timestamp so agents know the current date/time.
       // Only BodyForAgent gets the timestamp — Body stays raw for UI display.
-      // See: https://github.com/moltbot/moltbot/issues/3658
+      // See: https://github.com/forge-orchestrator/forge-orchestrator/issues/3658
       const stampedMessage = injectTimestamp(parsedMessage, timestampOptsFromConfig(cfg));
 
       const ctx: MsgContext = {

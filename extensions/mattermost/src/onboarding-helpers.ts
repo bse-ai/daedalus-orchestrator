@@ -1,12 +1,12 @@
-import type { OpenClawConfig, WizardPrompter } from "openclaw/plugin-sdk";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "openclaw/plugin-sdk";
+import type { ForgeOrchestratorConfig, WizardPrompter } from "forge-orchestrator/plugin-sdk";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "forge-orchestrator/plugin-sdk";
 
 type PromptAccountIdParams = {
-  cfg: OpenClawConfig;
+  cfg: ForgeOrchestratorConfig;
   prompter: WizardPrompter;
   label: string;
   currentId?: string;
-  listAccountIds: (cfg: OpenClawConfig) => string[];
+  listAccountIds: (cfg: ForgeOrchestratorConfig) => string[];
   defaultAccountId: string;
 };
 

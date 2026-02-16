@@ -16,7 +16,7 @@ describe("readFirstUserMessageFromTranscript", () => {
   let storePath: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-session-fs-test-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "forge-orchestrator-session-fs-test-"));
     storePath = path.join(tmpDir, "sessions.json");
   });
 
@@ -183,7 +183,7 @@ describe("readLastMessagePreviewFromTranscript", () => {
   let storePath: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-session-fs-test-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "forge-orchestrator-session-fs-test-"));
     storePath = path.join(tmpDir, "sessions.json");
   });
 
@@ -372,7 +372,7 @@ describe("readSessionMessages", () => {
   let storePath: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-session-fs-test-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "forge-orchestrator-session-fs-test-"));
     storePath = path.join(tmpDir, "sessions.json");
   });
 
@@ -403,13 +403,13 @@ describe("readSessionMessages", () => {
     const marker = out[1] as {
       role: string;
       content?: Array<{ text?: string }>;
-      __openclaw?: { kind?: string; id?: string };
+      __forgeOrch?: { kind?: string; id?: string };
       timestamp?: number;
     };
     expect(marker.role).toBe("system");
     expect(marker.content?.[0]?.text).toBe("Compaction");
-    expect(marker.__openclaw?.kind).toBe("compaction");
-    expect(marker.__openclaw?.id).toBe("comp-1");
+    expect(marker.__forgeOrch?.kind).toBe("compaction");
+    expect(marker.__forgeOrch?.id).toBe("comp-1");
     expect(typeof marker.timestamp).toBe("number");
   });
 });
@@ -419,7 +419,7 @@ describe("readSessionPreviewItemsFromTranscript", () => {
   let storePath: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-session-preview-test-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "forge-orchestrator-session-preview-test-"));
     storePath = path.join(tmpDir, "sessions.json");
   });
 
@@ -518,14 +518,14 @@ describe("resolveSessionTranscriptCandidates", () => {
     vi.unstubAllEnvs();
   });
 
-  test("fallback candidate uses OPENCLAW_HOME instead of os.homedir()", () => {
-    vi.stubEnv("OPENCLAW_HOME", "/srv/openclaw-home");
+  test("fallback candidate uses FORGE_ORCH_HOME instead of os.homedir()", () => {
+    vi.stubEnv("FORGE_ORCH_HOME", "/srv/forge-orchestrator-home");
     vi.stubEnv("HOME", "/home/other");
 
     const candidates = resolveSessionTranscriptCandidates("sess-1", undefined);
     const fallback = candidates[candidates.length - 1];
     expect(fallback).toBe(
-      path.join(path.resolve("/srv/openclaw-home"), ".openclaw", "sessions", "sess-1.jsonl"),
+      path.join(path.resolve("/srv/forge-orchestrator-home"), ".forge-orchestrator", "sessions", "sess-1.jsonl"),
     );
   });
 });
@@ -534,14 +534,14 @@ describe("resolveSessionTranscriptCandidates safety", () => {
   test("drops unsafe session IDs instead of producing traversal paths", () => {
     const candidates = resolveSessionTranscriptCandidates(
       "../etc/passwd",
-      "/tmp/openclaw/agents/main/sessions/sessions.json",
+      "/tmp/forge-orchestrator/agents/main/sessions/sessions.json",
     );
 
     expect(candidates).toEqual([]);
   });
 
   test("drops unsafe sessionFile candidates and keeps safe fallbacks", () => {
-    const storePath = "/tmp/openclaw/agents/main/sessions/sessions.json";
+    const storePath = "/tmp/forge-orchestrator/agents/main/sessions/sessions.json";
     const candidates = resolveSessionTranscriptCandidates(
       "sess-safe",
       storePath,
@@ -560,9 +560,9 @@ describe("archiveSessionTranscripts", () => {
   let storePath: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-archive-test-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "forge-orchestrator-archive-test-"));
     storePath = path.join(tmpDir, "sessions.json");
-    vi.stubEnv("OPENCLAW_HOME", tmpDir);
+    vi.stubEnv("FORGE_ORCH_HOME", tmpDir);
   });
 
   afterEach(() => {

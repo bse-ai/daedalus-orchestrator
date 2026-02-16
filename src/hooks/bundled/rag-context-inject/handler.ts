@@ -5,7 +5,7 @@
  * and injects relevant context as a synthetic bootstrap file on session start.
  */
 
-import type { OpenClawConfig } from "../../../config/config.js";
+import type { ForgeOrchestratorConfig } from "../../../config/config.js";
 import type {
   GraphitiConfig,
   LightRAGConfig,

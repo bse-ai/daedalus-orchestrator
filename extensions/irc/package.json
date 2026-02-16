@@ -1,12 +1,12 @@
 {
-  "name": "@openclaw/irc",
+  "name": "@forge-orchestrator/irc",
   "version": "2026.2.13",
-  "description": "OpenClaw IRC channel plugin",
+  "description": "ForgeOrchestrator IRC channel plugin",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "forge-orchestrator": "workspace:*"
   },
-  "openclaw": {
+  "forge-orchestrator": {
     "extensions": [
       "./index.ts"
     ]

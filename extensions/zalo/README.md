@@ -1,17 +1,17 @@
-# @openclaw/zalo
+# @forge-orchestrator/zalo
 
-Zalo channel plugin for OpenClaw (Bot API).
+Zalo channel plugin for ForgeOrchestrator (Bot API).
 
 ## Install (local checkout)
 
 ```bash
-openclaw plugins install ./extensions/zalo
+forge-orchestrator plugins install ./extensions/zalo
 ```
 
 ## Install (npm)
 
 ```bash
-openclaw plugins install @openclaw/zalo
+forge-orchestrator plugins install @forge-orchestrator/zalo
 ```
 
 Onboarding: select Zalo and confirm the install prompt to fetch the plugin automatically.

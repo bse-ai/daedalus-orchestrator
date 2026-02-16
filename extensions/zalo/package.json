@@ -1,15 +1,15 @@
 {
-  "name": "@openclaw/zalo",
+  "name": "@forge-orchestrator/zalo",
   "version": "2026.2.13",
-  "description": "OpenClaw Zalo channel plugin",
+  "description": "ForgeOrchestrator Zalo channel plugin",
   "type": "module",
   "dependencies": {
     "undici": "7.21.0"
   },
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "forge-orchestrator": "workspace:*"
   },
-  "openclaw": {
+  "forge-orchestrator": {
     "extensions": [
       "./index.ts"
     ],
@@ -27,7 +27,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@openclaw/zalo",
+      "npmSpec": "@forge-orchestrator/zalo",
       "localPath": "extensions/zalo",
       "defaultChoice": "npm"
     }

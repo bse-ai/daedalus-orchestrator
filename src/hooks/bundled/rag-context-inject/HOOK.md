@@ -1,14 +1,14 @@
 ---
 name: rag-context-inject
 description: "Auto-inject relevant RAG context into agent bootstrap on session start"
-homepage: https://docs.openclaw.ai/hooks#rag-context-inject
+homepage: https://docs.forge-orchestrator.ai/hooks#rag-context-inject
 metadata:
   {
-    "openclaw":
+    "forge-orchestrator":
       {
         "emoji": "🧠",
         "events": ["agent:bootstrap"],
-        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with OpenClaw" }],
+        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with ForgeOrchestrator" }],
       },
   }
 ---
@@ -37,12 +37,12 @@ The hook creates a `RAG_CONTEXT.md` file in your agent's bootstrap directory wit
 ## Entities
 
 - **Person**: John Doe - Software engineer working on the API redesign
-- **Project**: clawdbot - OpenClaw agent framework with RAG integration
+- **Project**: forge-orchestrator - ForgeOrchestrator agent framework with RAG integration
 
 ## Relationships
 
-- John Doe WORKS_ON clawdbot (since 2026-01-15)
-- clawdbot USES Graphiti (for temporal knowledge)
+- John Doe WORKS_ON forge-orchestrator (since 2026-01-15)
+- forge-orchestrator USES Graphiti (for temporal knowledge)
 
 ## Memories
 
@@ -127,7 +127,7 @@ The hook triggers on the `agent:bootstrap` event, which fires when the agent is 
 To disable this hook:
 
 ```bash
-openclaw hooks disable rag-context-inject
+forge-orchestrator hooks disable rag-context-inject
 ```
 
 Or via config:
@@ -149,7 +149,7 @@ Or via config:
 ### No context appears in bootstrap
 
 - Verify RAG services are running: `curl http://localhost:8000/health`
-- Check hook is enabled: `openclaw hooks list`
+- Check hook is enabled: `forge-orchestrator hooks list`
 - Review logs for connection errors
 
 ### Context is stale or irrelevant

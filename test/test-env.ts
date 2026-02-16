@@ -54,8 +54,8 @@ function loadProfileEnv(): void {
 export function installTestEnv(): { cleanup: () => void; tempHome: string } {
   const live =
     process.env.LIVE === "1" ||
-    process.env.OPENCLAW_LIVE_TEST === "1" ||
-    process.env.OPENCLAW_LIVE_GATEWAY === "1";
+    process.env.FORGE_ORCH_LIVE_TEST === "1" ||
+    process.env.FORGE_ORCH_LIVE_GATEWAY === "1";
 
   // Live tests must use the real user environment (keys, profiles, config).
   // The default test env isolates HOME to avoid touching real state.
@@ -65,21 +65,23 @@ export function installTestEnv(): { cleanup: () => void; tempHome: string } {
   }
 
   const restore: RestoreEntry[] = [
-    { key: "OPENCLAW_TEST_FAST", value: process.env.OPENCLAW_TEST_FAST },
+    { key: "FORGE_ORCH_TEST_FAST", value: process.env.FORGE_ORCH_TEST_FAST },
     { key: "HOME", value: process.env.HOME },
     { key: "USERPROFILE", value: process.env.USERPROFILE },
     { key: "XDG_CONFIG_HOME", value: process.env.XDG_CONFIG_HOME },
     { key: "XDG_DATA_HOME", value: process.env.XDG_DATA_HOME },
     { key: "XDG_STATE_HOME", value: process.env.XDG_STATE_HOME },
     { key: "XDG_CACHE_HOME", value: process.env.XDG_CACHE_HOME },
-    { key: "OPENCLAW_STATE_DIR", value: process.env.OPENCLAW_STATE_DIR },
-    { key: "OPENCLAW_CONFIG_PATH", value: process.env.OPENCLAW_CONFIG_PATH },
-    { key: "OPENCLAW_GATEWAY_PORT", value: process.env.OPENCLAW_GATEWAY_PORT },
-    { key: "OPENCLAW_BRIDGE_ENABLED", value: process.env.OPENCLAW_BRIDGE_ENABLED },
-    { key: "OPENCLAW_BRIDGE_HOST", value: process.env.OPENCLAW_BRIDGE_HOST },
-    { key: "OPENCLAW_BRIDGE_PORT", value: process.env.OPENCLAW_BRIDGE_PORT },
-    { key: "OPENCLAW_CANVAS_HOST_PORT", value: process.env.OPENCLAW_CANVAS_HOST_PORT },
-    { key: "OPENCLAW_TEST_HOME", value: process.env.OPENCLAW_TEST_HOME },
+    { key: "FORGE_ORCH_STATE_DIR", value: process.env.FORGE_ORCH_STATE_DIR },
+    { key: "FORGE_ORCH_CONFIG_PATH", value: process.env.FORGE_ORCH_CONFIG_PATH },
+    { key: "FORGE_ORCH_GATEWAY_PORT", value: process.env.FORGE_ORCH_GATEWAY_PORT },
+    { key: "FORGE_ORCH_BRIDGE_ENABLED", value: process.env.FORGE_ORCH_BRIDGE_ENABLED },
+    { key: "FORGE_ORCH_BRIDGE_HOST", value: process.env.FORGE_ORCH_BRIDGE_HOST },
+    { key: "FORGE_ORCH_BRIDGE_PORT", value: process.env.FORGE_ORCH_BRIDGE_PORT },
+    { key: "FORGE_ORCH_CANVAS_HOST_PORT", value: process.env.FORGE_ORCH_CANVAS_HOST_PORT },
+    { key: "FORGE_ORCH_GATEWAY_TOKEN", value: process.env.FORGE_ORCH_GATEWAY_TOKEN },
+    { key: "FORGE_ORCH_GATEWAY_PASSWORD", value: process.env.FORGE_ORCH_GATEWAY_PASSWORD },
+    { key: "FORGE_ORCH_TEST_HOME", value: process.env.FORGE_ORCH_TEST_HOME },
     { key: "TELEGRAM_BOT_TOKEN", value: process.env.TELEGRAM_BOT_TOKEN },
     { key: "DISCORD_BOT_TOKEN", value: process.env.DISCORD_BOT_TOKEN },
     { key: "SLACK_BOT_TOKEN", value: process.env.SLACK_BOT_TOKEN },
@@ -91,23 +93,26 @@ export function installTestEnv(): { cleanup: () => void; tempHome: string } {
     { key: "NODE_OPTIONS", value: process.env.NODE_OPTIONS },
   ];
 
-  const tempHome = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-test-home-"));
+  const tempHome = fs.mkdtempSync(path.join(os.tmpdir(), "forge-orchestrator-test-home-"));
 
   process.env.HOME = tempHome;
   process.env.USERPROFILE = tempHome;
-  process.env.OPENCLAW_TEST_HOME = tempHome;
-  process.env.OPENCLAW_TEST_FAST = "1";
+  process.env.FORGE_ORCH_TEST_HOME = tempHome;
+  process.env.FORGE_ORCH_TEST_FAST = "1";
 
   // Ensure test runs never touch the developer's real config/state, even if they have overrides set.
-  delete process.env.OPENCLAW_CONFIG_PATH;
+  delete process.env.FORGE_ORCH_CONFIG_PATH;
   // Prefer deriving state dir from HOME so nested tests that change HOME also isolate correctly.
-  delete process.env.OPENCLAW_STATE_DIR;
+  delete process.env.FORGE_ORCH_STATE_DIR;
   // Prefer test-controlled ports over developer overrides (avoid port collisions across tests/workers).
-  delete process.env.OPENCLAW_GATEWAY_PORT;
-  delete process.env.OPENCLAW_BRIDGE_ENABLED;
-  delete process.env.OPENCLAW_BRIDGE_HOST;
-  delete process.env.OPENCLAW_BRIDGE_PORT;
-  delete process.env.OPENCLAW_CANVAS_HOST_PORT;
+  delete process.env.FORGE_ORCH_GATEWAY_PORT;
+  delete process.env.FORGE_ORCH_BRIDGE_ENABLED;
+  delete process.env.FORGE_ORCH_BRIDGE_HOST;
+  delete process.env.FORGE_ORCH_BRIDGE_PORT;
+  delete process.env.FORGE_ORCH_CANVAS_HOST_PORT;
+  // Avoid leaking gateway auth secrets from .env or previous tests into non-live test runs.
+  delete process.env.FORGE_ORCH_GATEWAY_TOKEN;
+  delete process.env.FORGE_ORCH_GATEWAY_PASSWORD;
   // Avoid leaking real GitHub/Copilot tokens into non-live test runs.
   delete process.env.TELEGRAM_BOT_TOKEN;
   delete process.env.DISCORD_BOT_TOKEN;
@@ -122,7 +127,7 @@ export function installTestEnv(): { cleanup: () => void; tempHome: string } {
 
   // Windows: prefer the default state dir so auth/profile tests match real paths.
   if (process.platform === "win32") {
-    process.env.OPENCLAW_STATE_DIR = path.join(tempHome, ".openclaw");
+    process.env.FORGE_ORCH_STATE_DIR = path.join(tempHome, ".forge-orchestrator");
   }
 
   process.env.XDG_CONFIG_HOME = path.join(tempHome, ".config");

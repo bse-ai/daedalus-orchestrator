@@ -3,7 +3,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 // HMAC both values with a fixed key so that comparison is always
 // constant-time regardless of input lengths, eliminating the
 // length-oracle side-channel.
-const HMAC_KEY = "openclaw-secret-equal-v1";
+const HMAC_KEY = "forge-orchestrator-secret-equal-v1";
 
 export function safeEqualSecret(
   provided: string | undefined | null,

@@ -1,6 +1,6 @@
 import { Type } from "@sinclair/typebox";
 
-import type { OpenClawConfig } from "../../config/config.js";
+import type { ForgeOrchestratorConfig } from "../../config/config.js";
 import {
   createGraphitiClient,
   DEFAULT_GRAPHITI_ENDPOINT,
@@ -24,7 +24,7 @@ const GraphitiSearchSchema = Type.Object({
 });
 
 export function createGraphitiSearchTool(options: {
-  config?: OpenClawConfig;
+  config?: ForgeOrchestratorConfig;
   agentSessionKey?: string;
 }): AnyAgentTool | null {
   const cfg = options.config;

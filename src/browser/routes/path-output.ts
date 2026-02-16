@@ -1,7 +1,7 @@
 import path from "node:path";
-import { resolvePreferredOpenClawTmpDir } from "../../infra/tmp-openclaw-dir.js";
+import { resolvePreferredForgeOrchestratorTmpDir } from "../../infra/tmp-forge-orchestrator-dir.js";
 
-export const DEFAULT_BROWSER_TMP_DIR = resolvePreferredOpenClawTmpDir();
+export const DEFAULT_BROWSER_TMP_DIR = resolvePreferredForgeOrchestratorTmpDir();
 export const DEFAULT_TRACE_DIR = DEFAULT_BROWSER_TMP_DIR;
 export const DEFAULT_DOWNLOAD_DIR = path.join(DEFAULT_BROWSER_TMP_DIR, "downloads");
 
