@@ -133,12 +133,16 @@ const DOCKS: Record<ChatChannelId, ChannelDock> = {
       polls: true,
       reactions: true,
       media: true,
+      blockStreaming: true,
     },
     commands: {
       enforceOwnerForCommands: true,
       skipWhenConfigEmpty: true,
     },
     outbound: { textChunkLimit: 4000 },
+    streaming: {
+      blockStreamingCoalesceDefaults: { minChars: 800, idleMs: 1500 },
+    },
     config: {
       resolveAllowFrom: ({ cfg, accountId }) =>
         resolveWhatsAppAccount({ cfg, accountId }).allowFrom ?? [],
