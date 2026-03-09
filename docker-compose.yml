@@ -26,12 +26,15 @@ services:
       CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY:-}
       CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE:-}
       GOG_KEYRING_PASSWORD: ${GOG_KEYRING_PASSWORD:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
     volumes:
       - ${FORGE_ORCH_CONFIG_DIR:-./docker}:/home/node/.openclaw
       - ${FORGE_ORCH_WORKSPACE_DIR:-./workspace}:/home/node/.openclaw/workspace
       - ${FORGE_ORCH_CREDENTIALS_DIR:-./docker/credentials}:/home/node/.openclaw/credentials
       - ${FORGE_ORCH_DEVICES_DIR:-./docker/devices}:/home/node/.openclaw/devices
       - ${FORGE_ORCH_IDENTITY_DIR:-./docker/identity}:/home/node/.openclaw/identity
+      - ./docker/canvas/voice.html:/app/dist/control-ui/voice.html:ro
+      - ./docker/canvas/voice.js:/app/dist/control-ui/voice.js:ro
     ports:
       - "${FORGE_ORCH_GATEWAY_PORT:-18789}:18789"
       - "${FORGE_ORCH_BRIDGE_PORT:-18790}:18790"

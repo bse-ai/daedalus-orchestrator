@@ -426,6 +426,17 @@ export function normalizeToolParams(params: unknown): Record<string, unknown> | 
   const record = params as Record<string, unknown>;
   const normalized = { ...record };
   // file_path → path (read, write, edit)
+  // Also handle common model mistakes: filename, filepath, file, filePath
+  if (!("path" in normalized) && !("file_path" in normalized)) {
+    const pathAliases = ["filePath", "filepath", "filename", "file", "fileName"] as const;
+    for (const alias of pathAliases) {
+      if (alias in normalized && typeof normalized[alias] === "string") {
+        normalized.path = normalized[alias];
+        delete normalized[alias];
+        break;
+      }
+    }
+  }
   if ("file_path" in normalized && !("path" in normalized)) {
     normalized.path = normalized.file_path;
     delete normalized.file_path;

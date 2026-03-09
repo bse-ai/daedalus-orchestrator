@@ -520,9 +520,29 @@ export function findChromeExecutableLinux(): BrowserExecutable | null {
     { kind: "chromium", path: "/usr/bin/chromium" },
     { kind: "chromium", path: "/usr/bin/chromium-browser" },
     { kind: "chromium", path: "/snap/bin/chromium" },
+    // Playwright-installed Chromium (Docker containers with OPENCLAW_INSTALL_BROWSER=1)
+    ...findPlaywrightChromiumCandidates(),
   ];
 
   return findFirstExecutable(candidates);
+}
+
+function findPlaywrightChromiumCandidates(): Array<BrowserExecutable> {
+  const browsersPath =
+    process.env.PLAYWRIGHT_BROWSERS_PATH || path.join(os.homedir(), ".cache", "ms-playwright");
+  try {
+    const entries = fs.readdirSync(browsersPath);
+    const chromiumDirs = entries
+      .filter((e) => e.startsWith("chromium-"))
+      .toSorted()
+      .toReversed(); // newest version first
+    return chromiumDirs.flatMap((dir) => [
+      { kind: "chromium" as const, path: path.join(browsersPath, dir, "chrome-linux64", "chrome") },
+      { kind: "chromium" as const, path: path.join(browsersPath, dir, "chrome-linux", "chrome") },
+    ]);
+  } catch {
+    return [];
+  }
 }
 
 export function findChromeExecutableWindows(): BrowserExecutable | null {
