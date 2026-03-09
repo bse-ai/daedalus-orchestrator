@@ -167,7 +167,10 @@ RUN --mount=type=cache,id=openclaw-bookworm-apt-cache,target=/var/cache/apt,shar
       mkdir -p /home/node/.cache/ms-playwright && \
       PLAYWRIGHT_BROWSERS_PATH=/home/node/.cache/ms-playwright \
       node /app/node_modules/playwright-core/cli.js install --with-deps chromium && \
-      chown -R node:node /home/node/.cache/ms-playwright; \
+      chown -R node:node /home/node/.cache/ms-playwright && \
+      # Create a stable symlink so config doesn't break on Playwright version bumps
+      chromium_bin="$(find /home/node/.cache/ms-playwright -name chrome -path '*/chrome-linux*/chrome' -type f | head -1)" && \
+      if [ -n "$chromium_bin" ]; then ln -sf "$chromium_bin" /usr/local/bin/chromium; fi; \
     fi
 
 # Optionally install Docker CLI for sandbox container management.
